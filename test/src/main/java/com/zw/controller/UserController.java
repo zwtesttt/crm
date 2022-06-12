@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,7 +32,7 @@ public class UserController {
 
     @RequestMapping("/settings/qx/user/login.do")
     @ResponseBody
-    public Object userDoLogin(HttpSession session, HttpServletRequest request, String username, String passwd, boolean islogin){
+    public Object userDoLogin(HttpSession session, HttpServletRequest request, HttpServletResponse response, String username, String passwd, String islogin){
         Map<String,Object> map = new HashMap<>();
         map.put("login_act",username);
         map.put("login_pwd",passwd);
@@ -59,7 +61,30 @@ public class UserController {
             }else {
                 re.setCode(ReturnObject.RETURN_OBJECT_CODE_CG);
                 re.setMessage("登录成功");
+                //把登录成功的用户对象存到会话域中
                 session.setAttribute(ReturnObject.SESSION_USER,u);
+                //判断是否勾选十天免登录
+                if ("true".equals(islogin)){
+                    //将cookie发送到浏览器
+                    Cookie co1=new Cookie("username",username);
+                    //设置cookie的时间
+                    co1.setMaxAge(60*60*24*10);//以秒为单位60*60*24*10表示有效期10天
+                    response.addCookie(co1);
+                    Cookie co2=new Cookie("passwd",passwd);
+                    //设置cookie的时间
+                    co2.setMaxAge(60*60*24*10);
+                    response.addCookie(co2);
+                }else {
+                    //如果再次登录时未勾选则将cookie的时间设置为0，浏览器自动删除
+                    Cookie co1=new Cookie("username","1");
+                    //设置cookie的时间
+                    co1.setMaxAge(0);//以秒为单位60*60*24*10表示有效期10天
+                    response.addCookie(co1);
+                    Cookie co2=new Cookie("passwd","1");
+                    //设置cookie的时间
+                    co2.setMaxAge(0);
+                    response.addCookie(co2);
+                }
             }
         }
         return re;

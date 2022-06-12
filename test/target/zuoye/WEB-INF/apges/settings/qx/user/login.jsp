@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page isELIgnored="false" %>
+<%--<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>--%>
 <%
 	String path=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
 %>
@@ -68,14 +70,20 @@
 			<form action="settings/qx/user/login.do" class="form-horizontal" role="form">
 				<div class="form-group form-group-lg">
 					<div style="width: 350px;">
-						<input id="username" class="form-control" type="text" placeholder="用户名" name="username">
+						<input id="username" class="form-control" type="text" value="${cookie.username.value}" placeholder="用户名" name="username">
 					</div>
 					<div style="width: 350px; position: relative;top: 20px;">
-						<input id="passwd" class="form-control" type="password" placeholder="密码" name="passwd">
+						<input id="passwd" class="form-control" type="password" value="${cookie.passwd.value}" placeholder="密码" name="passwd">
 					</div>
 					<div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
 						<label>
-							<input id="cb" type="checkbox"> 十天内免登录
+<%--							<c:if test="${not empty cookie.username.value} and ${not empty cookie.passwd.value}">--%>
+<%--								<input id="cb" type="checkbox" checked> 十天内免登录--%>
+<%--							</c:if>--%>
+<%--							<c:if test="${empty cookie.username.value} or ${empty cookie.passwd.value}">--%>
+<%--								<input id="cb" type="checkbox"> 十天内免登录--%>
+<%--							</c:if>--%>
+							<input id="cb" type="checkbox"> 十天内免登录--%>
 						</label>
 						&nbsp;&nbsp;
 						<span id="msg"></span>
