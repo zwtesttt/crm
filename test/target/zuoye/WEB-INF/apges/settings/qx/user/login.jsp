@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page isELIgnored="false" %>
-<%--<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>--%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
 %>
@@ -77,13 +77,13 @@
 					</div>
 					<div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
 						<label>
-<%--							<c:if test="${not empty cookie.username.value} and ${not empty cookie.passwd.value}">--%>
-<%--								<input id="cb" type="checkbox" checked> 十天内免登录--%>
-<%--							</c:if>--%>
-<%--							<c:if test="${empty cookie.username.value} or ${empty cookie.passwd.value}">--%>
-<%--								<input id="cb" type="checkbox"> 十天内免登录--%>
-<%--							</c:if>--%>
-							<input id="cb" type="checkbox"> 十天内免登录--%>
+							<c:if test="${not empty cookie.username.value and not empty cookie.passwd.value}">
+								<input id="cb" type="checkbox" checked> 十天内免登录
+							</c:if>
+							<c:if test="${empty cookie.username.value or empty cookie.passwd.value}">
+								<input id="cb" type="checkbox"> 十天内免登录
+							</c:if>
+<%--							<input id="cb" type="checkbox"> 十天内免登录--%>
 						</label>
 						&nbsp;&nbsp;
 						<span id="msg"></span>
