@@ -83,7 +83,6 @@
 							<c:if test="${empty cookie.username.value or empty cookie.passwd.value}">
 								<input id="cb" type="checkbox"> 十天内免登录
 							</c:if>
-<%--							<input id="cb" type="checkbox"> 十天内免登录--%>
 						</label>
 						&nbsp;&nbsp;
 						<span id="msg"></span>

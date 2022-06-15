@@ -65,21 +65,15 @@ public class UserController {
                 session.setAttribute(ReturnObject.SESSION_USER,u);
                 //判断是否勾选十天免登录
                 if ("true".equals(islogin)){
-                    Cookie[] cli=request.getCookies();
-                    for (Cookie c:cli
-                         ) {
-                        if (!"username".equals(c.getName())){
-                            //将cookie发送到浏览器
-                            Cookie co1=new Cookie("username",username);
-                            //设置cookie的时间
-                            co1.setMaxAge(60*60*24*10);//以秒为单位60*60*24*10表示有效期10天
-                            response.addCookie(co1);
-                            Cookie co2=new Cookie("passwd",passwd);
-                            //设置cookie的时间
-                            co2.setMaxAge(60*60*24*10);
-                            response.addCookie(co2);
-                        }
-                    }
+                    //将cookie发送到浏览器
+                    Cookie co1=new Cookie("username",username);
+                    //设置cookie的时间
+                    co1.setMaxAge(60*60*24*10);//以秒为单位60*60*24*10表示有效期10天
+                    response.addCookie(co1);
+                    Cookie co2=new Cookie("passwd",passwd);
+                    //设置cookie的时间
+                    co2.setMaxAge(60*60*24*10);
+                    response.addCookie(co2);
                 }else {
                     //如果再次登录时未勾选则将cookie的时间设置为0，浏览器自动删除
                     Cookie co1=new Cookie("username","1");
@@ -94,5 +88,20 @@ public class UserController {
             }
         }
         return re;
+    }
+    @RequestMapping("/settings/qx/user/logout.do")
+    public String logout(HttpSession session,HttpServletResponse response){
+        //如果再次登录时未勾选则将cookie的时间设置为0，浏览器自动删除
+        Cookie co1=new Cookie("username","1");
+        //设置cookie的时间
+        co1.setMaxAge(0);//以秒为单位60*60*24*10表示有效期10天
+        response.addCookie(co1);
+        Cookie co2=new Cookie("passwd","1");
+        //设置cookie的时间
+        co2.setMaxAge(0);
+        response.addCookie(co2);
+        session.invalidate();
+
+        return "redirect:/";
     }
 }

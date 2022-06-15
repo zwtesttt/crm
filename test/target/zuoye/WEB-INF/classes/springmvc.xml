@@ -13,4 +13,14 @@
     <mvc:default-servlet-handler />
     <mvc:annotation-driven />
 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/settings/**"/>
+            <mvc:mapping path="/workbench/**"/>
+            <mvc:exclude-mapping path="/settings/qx/user/tologin"/>
+            <mvc:exclude-mapping path="/settings/qx/user/login.do"/>
+            <bean class="com.zw.controller.lanjie.UrlLanjie" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>
