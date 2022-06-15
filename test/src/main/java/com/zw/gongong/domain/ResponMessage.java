@@ -2,7 +2,7 @@ package com.zw.gongong.domain;
 
 public class ResponMessage {
     private Integer code;//0为登录失败，1为登录成功
-    private String message;//登录信息
+    private String message;//信息
     private Object xiangy;//响应数据
 
     public Integer getCode() {

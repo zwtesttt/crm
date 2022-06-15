@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+<!--    //导入properties配置文件-->
+    <properties resource="jdbc.properties"></properties>
+<!--    //指定jdbc驱动的位置-->
+<!--    //使用配置文件指定的jdbc驱动路径-->
+    <classPathEntry location="${jdbc.driverLocation}" />
+
+<!--    //数据库连接信息-->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <jdbcConnection
+                driverClass="${jdbc.driverClass}"
+                connectionURL="${jdbc.connectionURL}"
+                userId="${jdbc.username}"
+                password="${jdbc.passwd}">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+<!--        //指定实体类生成的信息-->
+        <!--        //指定逆向工程生成的实体类放到哪个包下，会放在targetProject指定的路径下-->
+        <!--        //指定逆向工程生成的实体类放到哪个目录下-->
+        <javaModelGenerator
+
+        targetPackage="com.zw.domain"
+
+        targetProject="C:\Users\86147\IdeaProjects\test2\test\src\main\java">
+
+        <property name="enableSubPackages" value="true" />
+        <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+<!--    //指定dao配置文件放在什么地方--><!--    //指定放在哪个目录下--><!--    //指定放在哪个包下-->
+    <sqlMapGenerator
+
+    targetPackage="com.zw.dao"
+
+    targetProject="C:\Users\86147\IdeaProjects\test2\test\src\main\java">
+    <property name="enableSubPackages" value="true" />
+</sqlMapGenerator>
+
+<!--        //指定生成的dao接口放在什么地方--><!--        //指定放在哪个包下-->
+<javaClientGenerator type="XMLMAPPER"
+
+        targetPackage="com.zw.dao"
+
+        targetProject="C:\Users\86147\IdeaProjects\test2\test\src\main\java"><!--        //指定放在哪个目录下-->
+
+<property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+<!--        //指定根据哪个表生成-->
+<table tableName="tbl_activity" domainObjectName="activity" >
+<property name="useActualColumnNames" value="true"/>
+<generatedKey column="ID" sqlStatement="DB2" identity="true" />
+<columnOverride column="DATE_FIELD" property="startDate" />
+<ignoreColumn column="FRED" />
+<columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />
+</table>
+
+        </context>
+        </generatorConfiguration>

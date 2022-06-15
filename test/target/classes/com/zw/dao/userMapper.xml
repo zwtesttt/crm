@@ -98,11 +98,19 @@
     id, login_act, name, login_pwd, email, expire_time, lock_state, deptno, allow_ips, 
     createTime, create_by, edit_time, edit_by
   </sql>
+
   <select id="selectUser" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"></include>
     from tbl_user
     where login_act=#{login_act} and login_pwd=#{login_pwd}
+  </select>
+
+  <select id="selectusers" resultType="com.zw.domain.user">
+        select
+        <include refid="Base_Column_List"></include>
+        from tbl_user
+        where lock_state=1
   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.zw.domain.userExample" >
     <!--

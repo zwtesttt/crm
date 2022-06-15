@@ -96,4 +96,5 @@ public interface userMapper {
      */
     int updateByPrimaryKey(user record);
     user selectUser(Map<String,Object> map);
+    List<user> selectusers();
 }
