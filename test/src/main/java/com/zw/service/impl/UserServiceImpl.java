@@ -28,6 +28,6 @@ public class UserServiceImpl implements UserService {
         return userdao.selectusers();
     }
     public int addactivity(activity record){
-        return activity.addactivity(record);
+        return activity.insert(record);
     }
 }

@@ -30,7 +30,7 @@
 
         targetPackage="com.zw.domain"
 
-        targetProject="C:\Users\86147\IdeaProjects\test2\test\src\main\java">
+        targetProject="C:\Users\user1\Desktop\test\CRM1\test\src\main\java">
 
         <property name="enableSubPackages" value="true" />
         <property name="trimStrings" value="true" />
@@ -41,7 +41,7 @@
 
     targetPackage="com.zw.dao"
 
-    targetProject="C:\Users\86147\IdeaProjects\test2\test\src\main\java">
+    targetProject="C:\Users\user1\Desktop\test\CRM1\test\src\main\java">
     <property name="enableSubPackages" value="true" />
 </sqlMapGenerator>
 
@@ -50,7 +50,7 @@
 
         targetPackage="com.zw.dao"
 
-        targetProject="C:\Users\86147\IdeaProjects\test2\test\src\main\java"><!--        //指定放在哪个目录下-->
+        targetProject="C:\Users\user1\Desktop\test\CRM1\test\src\main\java"><!--        //指定放在哪个目录下-->
 
 <property name="enableSubPackages" value="true" />
         </javaClientGenerator>

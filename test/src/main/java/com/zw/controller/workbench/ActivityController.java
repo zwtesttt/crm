@@ -2,20 +2,21 @@ package com.zw.controller.workbench;
 
 import com.zw.domain.activity;
 import com.zw.domain.user;
+import com.zw.gongong.changliang.ReturnObject;
 import com.zw.gongong.domain.ResponMessage;
+import com.zw.gongong.tools.DateFormat;
 import com.zw.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
-import static com.zw.gongong.changliang.ReturnObject.RETURN_OBJECT_CODE_CG;
-import static com.zw.gongong.changliang.ReturnObject.RETURN_OBJECT_CODE_SB;
+import static com.zw.gongong.changliang.ReturnObject.*;
 
 @Controller
 public class ActivityController {
@@ -27,15 +28,14 @@ public class ActivityController {
         request.setAttribute("userlist",li);
         return "workbench/activity/index";
     }
-    @RequestMapping("/workbench/activity/create.do")
-    public Object addactivity(String owner, String name, String start_date,String end_date,String cost,String message){
-        activity ac =new activity();
-        ac.setOwner(owner);
-        ac.setName(name);
-        ac.setStart_date(start_date);
-        ac.setEnd_date(end_date);
-        ac.setCost(cost);
-        ac.setDescription(message);
+    @RequestMapping(value = "/workbench/activity/create.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Object addactivity(activity ac, HttpSession session){
+        String uuid= UUID.randomUUID().toString().replaceAll("-","");
+        ac.setId(uuid);
+        ac.setCreate_time(DateFormat.datefor(new Date()));
+        user h=(user)session.getAttribute(ReturnObject.SESSION_USER);
+        ac.setCreate_by(h.getId());
         int i = service.addactivity(ac);
         ResponMessage re = new ResponMessage();
         if (i!=0){
