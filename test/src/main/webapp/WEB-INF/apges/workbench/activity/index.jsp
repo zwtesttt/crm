@@ -15,13 +15,24 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <script type="text/javascript">
 
 	$(function(){
 		$("#createbt").click(function (){
+			$("#createac")[0].reset()
 			$("#createActivityModal").modal("show")
+
+		})
+		$(".dateclose").datetimepicker({
+			language:'zh-CN',
+			format:"yyyy-mm-dd",
+			minView:"month",
+			initData:new Date(),
+			autoclose:true,
+			todayBtn:true,
+			clearBtn:true
 		})
 
 		$("#savebt").click(function (){
@@ -94,8 +105,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				</div>
 				<div class="modal-body">
 				
-					<form class="form-horizontal" role="form">
-					
+					<form id="createac" class="form-horizontal" role="form">
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
@@ -114,11 +124,11 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 						<div class="form-group">
 							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime">
+								<input type="text" class="form-control dateclose" id="create-startTime" readonly>
 							</div>
 							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime">
+								<input type="text" class="form-control dateclose" id="create-endTime" readonly>
 							</div>
 						</div>
                         <div class="form-group">
