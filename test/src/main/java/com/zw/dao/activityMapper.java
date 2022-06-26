@@ -3,6 +3,8 @@ package com.zw.dao;
 import com.zw.domain.activity;
 import com.zw.domain.activityExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface activityMapper {
@@ -93,4 +95,7 @@ public interface activityMapper {
      * @mbggenerated Thu Jun 16 16:09:45 CST 2022
      */
     int updateByPrimaryKey(activity record);
+
+    List<activity> queryactivity(Map<String,Object> map);
+    int selectCon(Map<String,Object> map);
 }

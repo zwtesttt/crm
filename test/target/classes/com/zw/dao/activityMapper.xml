@@ -125,6 +125,8 @@
     <include refid="Base_Column_List" />
     from tbl_activity
     where id = #{id,jdbcType=CHAR}
+    order by desc
+
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--
@@ -135,6 +137,55 @@
     delete from tbl_activity
     where id = #{id,jdbcType=CHAR}
   </delete>
+  <select id="queryactivity" parameterType="map" resultMap="BaseResultMap">
+    select
+        a1.id,a1.name,u1.name as owner,a1.start_date,a1.end_date,a1.cost,a1.description,create_time,u2.name as create_by,a1.edit_time,u3.name as edit_by
+    from tbl_activity a1
+    join tbl_user u1 on a1.owner=u1.id
+    join tbl_user u2 on a1.create_by=u2.id
+    left join tbl_user u3 on a1.edit_by=u3.id
+    <where>
+      <if test="name!=null and name!=''">
+         a1.name=#{name}
+      </if>
+      <if test="owner!=null and owner!=''">
+        a1.owner=#{owner}
+      </if>
+        <if test="start_date!=null and end_date!=''">
+          a1.start_date=#{start_date}
+        </if>
+        <if test="end_date!=null and end_date!=''">
+          a1.end_date=#{end_date}
+        </if>
+    </where>
+    order by a1.start_date desc
+    limit #{start_flg},#{pageflg}
+  </select>
+
+<!--查询符合条件的总条数-->
+  <select id="selectCon" parameterType="map" resultType="int">
+    select
+     count(*)
+    from tbl_activity a1
+    join tbl_user u1 on a1.owner=u1.id
+    join tbl_user u2 on a1.create_by=u2.id
+    left join tbl_user u3 on a1.edit_by=u3.id
+    <where>
+      <if test="name!=null and name!=''">
+        a1.name=#{name}
+      </if>
+      <if test="owner!=null and owner!=''">
+        a1.owner=#{owner}
+      </if>
+      <if test="start_date!=null and end_date!=''">
+        a1.start_date=#{start_date}
+      </if>
+      <if test="end_date!=null and end_date!=''">
+        a1.end_date=#{end_date}
+      </if>
+    </where>
+  </select>
+
   <delete id="deleteByExample" parameterType="com.zw.domain.activityExample">
     <!--
       WARNING - @mbggenerated

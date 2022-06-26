@@ -3,9 +3,11 @@ package com.zw.controller.workbench;
 import com.zw.domain.activity;
 import com.zw.domain.user;
 import com.zw.gongong.changliang.ReturnObject;
+import com.zw.gongong.domain.Activityrespon;
 import com.zw.gongong.domain.ResponMessage;
 import com.zw.gongong.tools.DateFormat;
 import com.zw.service.UserService;
+import com.zw.service.activityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,8 @@ import static com.zw.gongong.changliang.ReturnObject.*;
 public class ActivityController {
     @Autowired
     UserService service;
+    @Autowired
+    activityService acser;
     @RequestMapping("/workbench/activity/index")
     public String index(HttpServletRequest request){
         List<user> li = service.selectUsers();
@@ -45,6 +49,23 @@ public class ActivityController {
             re.setCode(RETURN_OBJECT_CODE_SB);
             re.setMessage("创建失败");
         }
+        return re;
+    }
+    @RequestMapping("/workbench/activity/chaxunac")
+    @ResponseBody
+    public Object chaxunac(String name,String owner,String start_date,String end_date,Integer start_flg,Integer pageflg){
+        Map<String,Object> map=new HashMap<>();
+        map.put("name",name);
+        map.put("owner",owner);
+        map.put("start_date",start_date);
+        map.put("end_date",end_date);
+        map.put("start_flg",(start_flg-1)*pageflg);
+        map.put("pageflg",pageflg);
+        List<activity> ali=acser.selectActivity(map);
+        int act=acser.recount(map);
+        Activityrespon re=new Activityrespon();
+        re.setActivityList(ali);
+        re.setCounts(String.valueOf(act));
         return re;
     }
 }
