@@ -86,7 +86,17 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				}
 			})
 		})
-		// 加载市场活动记录
+		//加载完成后加载市场活动记录
+		reloadac()
+		//单机查询按钮后执行加载市场活动方法
+		$("#chaxunbt").click(function (){
+			reloadac()
+		})
+
+
+	});
+	// 加载市场活动记录
+	function reloadac(){
 		var name=$("#query-name").val()
 		var owner=$("#query-owner").val()
 		var startdate=$("#query-startdate").val()
@@ -108,7 +118,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				$("#ctB").text(resp.counts)
 				var activityhtml=""
 				$.each(resp.activityList,function (i,p){
-						activityhtml+="<tr class=\"active\">--%>"
+					activityhtml+="<tr class=\"active\">--%>"
 					activityhtml+="<td><input type=\"checkbox\" value=\""+p.id+"\"/></td>"
 					activityhtml+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.html';\">"+p.name+"</a></td>"
 					activityhtml+="<td>"+p.owner+"</td>"
@@ -119,9 +129,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				$("#listB").html(activityhtml)
 			}
 		})
-		
-		
-	});
+	}
 	
 </script>
 </head>
@@ -335,7 +343,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="chaxunbt">查询</button>
 				  
 				</form>
 			</div>
