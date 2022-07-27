@@ -137,6 +137,7 @@
     delete from tbl_activity
     where id = #{id,jdbcType=CHAR}
   </delete>
+
   <select id="queryactivity" parameterType="map" resultMap="BaseResultMap">
     select
         a1.id,a1.name,u1.name as owner,a1.start_date,a1.end_date,a1.cost,a1.description,create_time,u2.name as create_by,a1.edit_time,u3.name as edit_by
@@ -146,16 +147,16 @@
     left join tbl_user u3 on a1.edit_by=u3.id
     <where>
       <if test="name!=null and name!=''">
-         a1.name=#{name}
+         and a1.name like '%' #{name} '%'
       </if>
       <if test="owner!=null and owner!=''">
-        a1.owner=#{owner}
+        and u1.name like '%' #{owner} '%'
       </if>
-        <if test="start_date!=null and end_date!=''">
-          a1.start_date=#{start_date}
+        <if test="start_date!=null and start_date!=''">
+          and a1.start_date&gt;=#{start_date}
         </if>
         <if test="end_date!=null and end_date!=''">
-          a1.end_date=#{end_date}
+          and a1.end_date&lt;=#{end_date}
         </if>
     </where>
     order by a1.start_date desc
@@ -172,16 +173,16 @@
     left join tbl_user u3 on a1.edit_by=u3.id
     <where>
       <if test="name!=null and name!=''">
-        a1.name=#{name}
+        and a1.name like '%' #{name} '%'
       </if>
       <if test="owner!=null and owner!=''">
-        a1.owner=#{owner}
+        and u1.name like '%' #{owner} '%'
       </if>
-      <if test="start_date!=null and end_date!=''">
-        a1.start_date=#{start_date}
+      <if test="start_date!=null and start_date!=''">
+        and a1.start_date&gt;=#{start_date}
       </if>
       <if test="end_date!=null and end_date!=''">
-        a1.end_date=#{end_date}
+        and a1.end_date&lt;=#{end_date}
       </if>
     </where>
   </select>

@@ -16,10 +16,15 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="bs_pagination-master/jquery.bs_pagination.min.css">
+	<script type="text/javascript" src="bs_pagination-master/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="bs_pagination-master/localization/en.min.js"></script>
+
 
 <script type="text/javascript">
 
 	$(function(){
+
 		// 用户点击创建按钮后重置表单
 		$("#createbt").click(function (){
 			$("#createac")[0].reset()
@@ -79,30 +84,33 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 						if(resp.code==1){
 							alert(resp.message)
 							$("#createActivityModal").modal("hide")
+							reloadac(1,$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'))
 						}else {
 							alert(resp.message)
 							$("#createActivityModal").modal("show")
 						}
+
 				}
 			})
 		})
+
 		//加载完成后加载市场活动记录
-		reloadac()
+		reloadac(1,10)
 		//单机查询按钮后执行加载市场活动方法
 		$("#chaxunbt").click(function (){
-			reloadac()
+			reloadac(1,$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'))
 		})
 
 
 	});
 	// 加载市场活动记录
-	function reloadac(){
+	function reloadac(startflg,pagecout){
 		var name=$("#query-name").val()
 		var owner=$("#query-owner").val()
 		var startdate=$("#query-startdate").val()
 		var enddate=$("#query-enddate").val()
-		var startflg=1
-		var pagecout=10
+		// var startflg=1
+		// var pagecout=10
 		$.ajax({
 			url:"workbench/activity/chaxunac",
 			type:"post",
@@ -115,7 +123,9 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				pageflg:pagecout
 			},
 			success:function (resp){
-				$("#ctB").text(resp.counts)
+				//显示总条数
+				//$("#ctB").text(resp.counts)
+
 				var activityhtml=""
 				$.each(resp.activityList,function (i,p){
 					activityhtml+="<tr class=\"active\">--%>"
@@ -127,6 +137,36 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 					activityhtml+="</tr>"
 				})
 				$("#listB").html(activityhtml)
+				//计算总页数
+				var zonyeshu=1
+				//判断总条数除于每页条数是否可以整除
+				if(resp.counts%pagecout==0){
+					zonyeshu=resp.counts/pagecout
+				}else {
+					//将小数转换成整数
+					zonyeshu=parseInt(resp.counts/pagecout)+1
+				}
+				//调用分页工具函数
+				//当页面加载完成后创建分页插件
+				$("#demo_pag1").bs_pagination({
+					totalPages:zonyeshu,
+					currentPage: startflg,
+					rowsPerPage: pagecout,
+					totalRows: resp.counts,
+					visiblePageLinks: 5,//一组可以显示多少个卡片
+
+
+					showGoToPage: true,//是否显示“跳转到”卡片
+					showRowsPerPage: true,//是否显示“每页显示条数”
+					showRowsInfo: true,//是否显示记录的信息
+					//当用户切换页号，都会执行该函数
+					onChangePage: function(event,pageObj) {
+						// returns page_num and rows_per_page after a link has clicked
+						// alert(pageObj.currentPage)//获取切换后的页号
+						// alert(pageObj.rowsPerPage)//获取切换后的条数
+						reloadac(pageObj.currentPage,pageObj.rowsPerPage)
+					},
+				});
 			}
 		})
 	}
@@ -387,43 +427,45 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <%--                        </tr>--%>
 					</tbody>
 				</table>
+				<div id="demo_pag1"></div>
 			</div>
+
 			
-			<div style="height: 50px; position: relative;top: 30px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b id="ctB">50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-			
+<%--			<div style="height: 50px; position: relative;top: 30px;">--%>
+<%--				<div>--%>
+<%--					<button type="button" class="btn btn-default" style="cursor: default;">共<b id="ctB">50</b>条记录</button>--%>
+<%--				</div>--%>
+<%--				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">--%>
+<%--					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>--%>
+<%--					<div class="btn-group">--%>
+<%--						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">--%>
+<%--							10--%>
+<%--							<span class="caret"></span>--%>
+<%--						</button>--%>
+<%--						<ul class="dropdown-menu" role="menu">--%>
+<%--							<li><a href="#">20</a></li>--%>
+<%--							<li><a href="#">30</a></li>--%>
+<%--						</ul>--%>
+<%--					</div>--%>
+<%--					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>--%>
+<%--				</div>--%>
+<%--				<div style="position: relative;top: -88px; left: 285px;">--%>
+<%--					<nav>--%>
+<%--						<ul class="pagination">--%>
+<%--							<li class="disabled"><a href="#">首页</a></li>--%>
+<%--							<li class="disabled"><a href="#">上一页</a></li>--%>
+<%--							<li class="active"><a href="#">1</a></li>--%>
+<%--							<li><a href="#">2</a></li>--%>
+<%--							<li><a href="#">3</a></li>--%>
+<%--							<li><a href="#">4</a></li>--%>
+<%--							<li><a href="#">5</a></li>--%>
+<%--							<li><a href="#">下一页</a></li>--%>
+<%--							<li class="disabled"><a href="#">末页</a></li>--%>
+<%--						</ul>--%>
+<%--					</nav>--%>
+<%--				</div>--%>
+<%--			</div>--%>
+
 		</div>
 		
 	</div>
