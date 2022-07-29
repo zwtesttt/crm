@@ -24,6 +24,36 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript">
 
 	$(function(){
+		//为listB中的所有checkbox添加单机事件
+		// $("#listB input[type='checkbox']").change(function (){
+		// 	//如果listB下的选中框数组长度和选中状态下的选择框数组长度一样说明全选了
+		// 	alert(123)
+		// 	if($("#listB input[type='checkbox']").size()==$("#listB input[type='checkbox']:checked").size()){
+		// 		$("#quanxuan").prop("checked",true)
+		// 	}else {
+		// 		$("#quanxuan").prop("checked",false)
+		// 	}
+		// })
+		$("#listB").on("click","input[type='checkbox']",function (){
+			if($("#listB input[type='checkbox']").size()==$("#listB input[type='checkbox']:checked").size()){
+				$("#quanxuan").prop("checked",true)
+			}else {
+				$("#quanxuan").prop("checked",false)
+			}
+				}
+		)
+
+
+
+		//点击全选按钮
+		$("#quanxuan").click(function (){
+			// if (this.checked==true){
+			// 	$("#listB input[type='checkbox']").prop("checkbox",true)//选择listB下的所有checkbox,将状态设置为选中
+			// }else {
+			// 	$("#listB input[type='checkbox']").prop("checkbox",false)//选择listB下的所有checkbox，将状态设置成取消选中
+			// }
+			$("#listB input[type='checkbox']").prop("checked",this.checked)
+		})
 
 		// 用户点击创建按钮后重置表单
 		$("#createbt").click(function (){
@@ -103,6 +133,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 
 
 	});
+
 	// 加载市场活动记录
 	function reloadac(startflg,pagecout){
 		var name=$("#query-name").val()
@@ -137,6 +168,10 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 					activityhtml+="</tr>"
 				})
 				$("#listB").html(activityhtml)
+
+				//取消全选按钮
+				$("#quanxuan").prop("checked",false)
+
 				//计算总页数
 				var zonyeshu=1
 				//判断总条数除于每页条数是否可以整除
@@ -403,7 +438,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="quanxuan"/></td>
 							<td>名称</td>
                             <td>所有者</td>
 							<td>开始日期</td>
