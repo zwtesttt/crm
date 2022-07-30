@@ -68,4 +68,22 @@ public class ActivityController {
         re.setCounts(String.valueOf(act));
         return re;
     }
+    @RequestMapping("/workbench/activity/delteAct.do")
+    @ResponseBody
+    public Object delteAct(String[] id){
+        ResponMessage reo=new ResponMessage();
+        try{
+            int resu=acser.delteac(id);
+            if(resu>0){
+                reo.setCode(RETURN_OBJECT_CODE_CG);
+                reo.setMessage("删除成功");
+            }else {
+                reo.setCode(RETURN_OBJECT_CODE_SB);
+                reo.setMessage("系统忙，请联系系统管理员");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return reo;
+    }
 }

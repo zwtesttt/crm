@@ -23,4 +23,9 @@ public class activityServiceImpl implements activityService {
         return ac.selectCon(map);
     }
 
+    @Override
+    public int delteac(String[] des) {
+        return ac.deleteactivict(des);
+    }
+
 }

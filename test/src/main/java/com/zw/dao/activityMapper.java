@@ -98,4 +98,6 @@ public interface activityMapper {
 
     List<activity> queryactivity(Map<String,Object> map);
     int selectCon(Map<String,Object> map);
+
+    int deleteactivict(String[] des);
 }

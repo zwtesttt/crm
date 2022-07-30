@@ -187,6 +187,13 @@
     </where>
   </select>
 
+<!--  删除市场活动-->
+ <delete id="deleteactivict" parameterType="string">
+   delete from tbl_activity where id in
+   <foreach collection="array" item="id" separator="," open="(" close=")">
+     #{id}
+   </foreach>
+ </delete>
   <delete id="deleteByExample" parameterType="com.zw.domain.activityExample">
     <!--
       WARNING - @mbggenerated

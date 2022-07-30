@@ -24,6 +24,37 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript">
 
 	$(function(){
+		//给删除按钮添加单机事件
+		$("#actdel").click(function (){
+			//获取参数
+			//获取被选中的checkbox的value
+			var checkeds=$("#listB input[type='checkbox']:checked")
+			if(checkeds.size==0){
+				alert("请选择要删除的市场活动")
+				return;
+			}
+			if(window.confirm("确定删除吗？")){
+				var ids=""
+				$.each(checkeds,function (){
+					ids+="id="+this.value+"&"
+				})
+				ids=ids.substr(0,ids.length-1)
+				$.ajax({
+					url:"workbench/activity/delteAct.do",
+					data:ids,
+					type:"post",
+					success:function (re){
+						if(re.code=="1"){
+							reloadac(1,$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'))
+						}else {
+							alert(re.message)
+						}
+					}
+				})
+			}
+		})
+
+
 		//为listB中的所有checkbox添加单机事件
 		// $("#listB input[type='checkbox']").change(function (){
 		// 	//如果listB下的选中框数组长度和选中状态下的选择框数组长度一样说明全选了
@@ -426,7 +457,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createbt"  data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="actdel"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				<div class="btn-group" style="position: relative; top: 18%;">
                     <button type="button" class="btn btn-default"  data-toggle="modal" data-target="#importActivityModal" ><span class="glyphicon glyphicon-import"></span> 上传列表数据（导入）</button>
