@@ -162,7 +162,12 @@
     order by a1.start_date desc
     limit #{start_flg},#{pageflg}
   </select>
-
+<!--  修改市场活动的-->
+  <update id="updateactivity" parameterType="com.zw.domain.activity">
+    update tbl_activity
+    set owner=#{owner},name=#{name},start_date=#{start_date},end_date=#{end_date},cost=#{cost},description=#{description},edit_time=#{edit_time},edit_by=#{edit_by}
+    where id=#{id}
+  </update>
 <!--查询符合条件的总条数-->
   <select id="selectCon" parameterType="map" resultType="int">
     select
@@ -194,6 +199,14 @@
      #{id}
    </foreach>
  </delete>
+
+<!--  修改市场活动-->
+  <select id="modifyact" parameterType="string" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_activity
+    where id=#{id}
+  </select>
   <delete id="deleteByExample" parameterType="com.zw.domain.activityExample">
     <!--
       WARNING - @mbggenerated

@@ -100,4 +100,6 @@ public interface activityMapper {
     int selectCon(Map<String,Object> map);
 
     int deleteactivict(String[] des);
+    activity modifyact(String id);
+    int updateactivity(activity activity);
 }

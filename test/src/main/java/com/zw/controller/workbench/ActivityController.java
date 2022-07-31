@@ -86,4 +86,35 @@ public class ActivityController {
         }
         return reo;
     }
+    @RequestMapping("/workbench/activity/modify.do")
+    @ResponseBody
+    public Object modifyactivity(String id){
+        activity reac=acser.modiac(id);
+        return reac;
+    }
+    @RequestMapping("/workbench/activity/savemodify.do")
+    @ResponseBody
+    public Object saveupdateact(activity ac,HttpSession session){
+        user us=(user)session.getAttribute(SESSION_USER);
+//        封装参数
+        ac.setEdit_time(DateFormat.datefor(new Date()));
+        ac.setEdit_by(us.getId());
+
+        ResponMessage rebo=new ResponMessage();
+        try {
+            int stu=acser.updateact(ac);
+            if (stu>0){
+                rebo.setCode(RETURN_OBJECT_CODE_CG);
+                rebo.setMessage("修改成功");
+            }else {
+                rebo.setCode(RETURN_OBJECT_CODE_SB);
+                rebo.setMessage("修改失败，请重试");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            rebo.setCode(RETURN_OBJECT_CODE_SB);
+            rebo.setMessage("修改失败，请重试");
+        }
+        return rebo;
+    }
 }

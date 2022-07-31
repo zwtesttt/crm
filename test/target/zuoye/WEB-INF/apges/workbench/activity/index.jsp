@@ -24,6 +24,94 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript">
 
 	$(function(){
+		//给更新按钮添加单机事件
+		$("#saveactivity").click(function (){
+			var id=$("#edit-id").val()
+			var owner=$("#edit-marketActivityOwner").val()
+			var name=$.trim($("#edit-marketActivityName").val())
+			var start_date=$("#edit-startTime").val()
+			var end_date=$("#edit-endTime").val()
+			var cost=$.trim($("#edit-cost").val())
+			var describe=$.trim($("#edit-describe").val())
+			if (owner==""){
+				alert("所有者不能为空")
+				return;
+			}else if(name==""){
+				alert("名称不能为空")
+				return;
+			}
+			if (start_date!=""&&end_date!=""){
+				if(start_date>end_date){
+					alert("开始时间不能大于结束时间")
+					return;
+				}
+			}
+			var resexp=/^(([1-9]\d*)|0)$/
+			if(resexp.test(cost)==false){
+				alert("开销只能为正整数")
+				return;
+			}
+			$.ajax({
+				url:"workbench/activity/savemodify.do",
+				type:"post",
+				data:{
+					id:id,
+					owner:owner,
+					name:name,
+					start_date:start_date,
+					end_date:end_date,
+					cost:cost,
+					description:describe
+				},
+				dataType: "json",
+				success:function (resp){
+					if (resp.code==1){
+						//关闭模态窗口
+						$("#editActivityModal").modal("hide")
+						reloadac($("#demo_pag1").bs_pagination('getOption', 'currentPage'),$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'))
+					}else {
+						alert(resp.message)
+						$("#editActivityModal").modal("show")
+					}
+				}
+			})
+
+		})
+
+
+		// 给修改按钮添加单机事件
+		$("#xiugaibt").click(function (){
+			// 获取被选中的checkbox
+			var checkeds=$("#listB input[type='checkbox']:checked")
+
+			if(checkeds.size() == 0){
+				alert("请选择要修改的市场活动")
+				return;
+			}else if (checkeds.size()>1){
+				alert('每次只能修改一条数据')
+				return;
+			}
+			var idd=checkeds.val()
+			$.ajax({
+				url:"workbench/activity/modify.do",
+				type:"post",
+				data:{
+					id:idd
+				},
+				success:function (resp){
+					//把市场活动信息加载到模态窗口
+					$("#edit-id").val(resp.id)
+					$("#edit-marketActivityOwner").val(resp.owner)
+					$("#edit-marketActivityName").val(resp.name)
+					$("#edit-startTime").val(resp.start_date)
+					$("#edit-endTime").val(resp.end_date)
+					$("#edit-cost").val(resp.cost)
+					$("#edit-describe").val(resp.description)
+					//显示模态窗口
+					$("#editActivityModal").modal("show")
+				}
+			})
+		})
 		//给删除按钮添加单机事件
 		$("#actdel").click(function (){
 			//获取参数
@@ -317,7 +405,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				<div class="modal-body">
 				
 					<form class="form-horizontal" role="form">
-					
+						<input type="hidden" id="edit-id"/>
 						<div class="form-group">
 							<label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
@@ -363,7 +451,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary"  id="saveactivity"> 更新</button>
 				</div>
 			</div>
 		</div>
@@ -456,7 +544,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createbt"  data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal" id="xiugaibt"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger" id="actdel"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				<div class="btn-group" style="position: relative; top: 18%;">

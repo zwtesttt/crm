@@ -28,4 +28,14 @@ public class activityServiceImpl implements activityService {
         return ac.deleteactivict(des);
     }
 
+    @Override
+    public activity modiac(String id) {
+        return ac.modifyact(id);
+    }
+
+    @Override
+    public int updateact(activity activity) {
+        return ac.updateactivity(activity);
+    }
+
 }
