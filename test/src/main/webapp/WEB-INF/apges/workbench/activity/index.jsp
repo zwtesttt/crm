@@ -24,6 +24,10 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript">
 
 	$(function(){
+		//给批量导出按钮添加单机事件
+		$("#exportActivityAllBtn").click(function (){
+			window.location.href="workbench/activity/exportAllActivity.do"
+		})
 		//给更新按钮添加单机事件
 		$("#saveactivity").click(function (){
 			var id=$("#edit-id").val()

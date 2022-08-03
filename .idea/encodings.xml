@@ -4,8 +4,9 @@
     <file url="file://$PROJECT_DIR$/test/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/gongong/domain/Activityrespon.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/service/activityService.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/service/impl/activityServiceImpl.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/service/impl/activityServiceImpl.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test/src/main/resources" charset="UTF-8" />
-    <file url="PROJECT" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test/src/test/java/com/zw/poi/App.java" charset="UTF-8" />
+    <file url="PROJECT" charset="GBK" />
   </component>
 </project>

@@ -38,4 +38,9 @@ public class activityServiceImpl implements activityService {
         return ac.updateactivity(activity);
     }
 
+    @Override
+    public List<activity> queryAllact() {
+        return ac.queryAllactivity();
+    }
+
 }

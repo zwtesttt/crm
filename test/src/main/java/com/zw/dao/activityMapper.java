@@ -102,4 +102,5 @@ public interface activityMapper {
     int deleteactivict(String[] des);
     activity modifyact(String id);
     int updateactivity(activity activity);
+    List<activity> queryAllactivity();
 }

@@ -11,4 +11,5 @@ public interface activityService {
     int delteac(String[] des);
     activity modiac(String id);
     int updateact(activity activity);
+    List<activity> queryAllact();
 }
