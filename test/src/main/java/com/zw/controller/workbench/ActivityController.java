@@ -206,10 +206,10 @@ public class ActivityController {
                 cell.setCellValue(ac.getEdit_by());
             }
 //            根据wb创建excel文件
-            OutputStream os=new FileOutputStream("C:\\Users\\86147\\Desktop\\java\\activity.xls");
-            wb.write(os);
-            os.close();
-            wb.close();
+//            OutputStream os=new FileOutputStream("C:\\Users\\86147\\Desktop\\java\\activity.xls");
+//            wb.write(os);
+           // os.close();
+
             //设置返回值类型
             response.setContentType("application/octet-stream;charset=UTF-8");
 //        获取输出流
@@ -217,15 +217,17 @@ public class ActivityController {
             //设置响应头
             response.addHeader("Content-Disposition","attachment;filename=activity.xls");
             //读取服务器本地的excel文件（InputStream），再输出到浏览器（OutputStream）
-            InputStream in=new FileInputStream("C:\\Users\\86147\\Desktop\\java\\activity.xls");
+//            InputStream in=new FileInputStream("C:\\Users\\86147\\Desktop\\java\\activity.xls");
             //设置每次读取多少个字节
-            byte[] buff=new byte[256];
-            int len=0;
-            while ((len=in.read(buff))!=-1){
-                out.write(buff,0,len);
-            }
-            in.close();
+//            byte[] buff=new byte[256];
+//            int len=0;
+//            while ((len=in.read(buff))!=-1){
+//                out.write(buff,0,len);
+//            }
+//            in.close();
+            wb.write(out);//将wb文件输出流的内容直接写入到响应输出流
             out.flush();
+            wb.close();
         }
 
 
