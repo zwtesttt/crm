@@ -229,8 +229,75 @@ public class ActivityController {
             out.flush();
             wb.close();
         }
+    }
+    @RequestMapping("/workbench/activity/xzQueryActivity.do")
+    public void xzQueryActivity(HttpServletResponse response,String[] id)throws Exception{
+        List<activity> list=acser.xzqueryActivity(id);
+        HSSFWorkbook wb=new HSSFWorkbook();
+        HSSFSheet sh= wb.createSheet("市场活动");
+        HSSFRow ro=sh.createRow(0);
+        HSSFCell cell=ro.createCell(0);
+        cell.setCellValue("ID");
+        cell=ro.createCell(1);
+        cell.setCellValue("所有者");
+        cell=ro.createCell(2);
+        cell.setCellValue("名称");
+        cell=ro.createCell(3);
+        cell.setCellValue("开始日期");
+        cell=ro.createCell(4);
+        cell.setCellValue("结束日期");
+        cell=ro.createCell(5);
+        cell.setCellValue("成本");
+        cell=ro.createCell(6);
+        cell.setCellValue("描述");
+        cell=ro.createCell(7);
+        cell.setCellValue("创建时间");
+        cell=ro.createCell(8);
+        cell.setCellValue("创建者");
+        cell=ro.createCell(9);
+        cell.setCellValue("修改时间");
+        cell=ro.createCell(10);
+        cell.setCellValue("修改者");
+//      判断市场活动是否为空
+        if (list!=null && list.size()>0){
+            activity ac=null;
+            //遍历市场活动list
+            for (int i=0;i<list.size();i++) {
+                ac= list.get(i);
 
-
-
+                ro=sh.createRow(i+1);
+                cell=ro.createCell(0);
+                cell.setCellValue(ac.getId());
+                cell=ro.createCell(1);
+                cell.setCellValue(ac.getOwner());
+                cell=ro.createCell(2);
+                cell.setCellValue(ac.getName());
+                cell=ro.createCell(3);
+                cell.setCellValue(ac.getStart_date());
+                cell=ro.createCell(4);
+                cell.setCellValue(ac.getEnd_date());
+                cell=ro.createCell(5);
+                cell.setCellValue(ac.getCost());
+                cell=ro.createCell(6);
+                cell.setCellValue(ac.getDescription());
+                cell=ro.createCell(7);
+                cell.setCellValue(ac.getCreate_time());
+                cell=ro.createCell(8);
+                cell.setCellValue(ac.getCreate_by());
+                cell=ro.createCell(9);
+                cell.setCellValue(ac.getEdit_time());
+                cell=ro.createCell(10);
+                cell.setCellValue(ac.getEdit_by());
+            }
+            //设置返回值类型
+            response.setContentType("application/octet-stream;charset=UTF-8");
+//        获取输出流
+            OutputStream out=response.getOutputStream();
+            //设置响应头
+            response.addHeader("Content-Disposition","attachment;filename=activity.xls");
+            wb.write(out);//将wb文件输出流的内容直接写入到响应输出流
+            out.flush();
+            wb.close();
+        }
     }
 }

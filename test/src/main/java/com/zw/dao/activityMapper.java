@@ -103,4 +103,7 @@ public interface activityMapper {
     activity modifyact(String id);
     int updateactivity(activity activity);
     List<activity> queryAllactivity();
+
+    List<activity> xzQueryActivity(String[] ids);
+
 }

@@ -24,6 +24,24 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript">
 
 	$(function(){
+		//给选择导出按钮添加单机事件
+		$("#exportActivityXzBtn").click(function (){
+			//获取参数
+			//获取被选中的checkbox的value
+			var checkeds=$("#listB input[type='checkbox']:checked")
+
+			if(checkeds.size()==0){
+				alert("请选择要导出的市场活动")
+				return;
+			}else {
+				var ids=""
+				$.each(checkeds,function (){
+					ids+="id="+this.value+"&"
+				})
+				ids=ids.substr(0,ids.length-1)
+				window.location.href="workbench/activity/xzQueryActivity.do?"+ids
+			}
+		})
 		//给批量导出按钮添加单机事件
 		$("#exportActivityAllBtn").click(function (){
 			window.location.href="workbench/activity/exportAllActivity.do"
@@ -121,7 +139,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 			//获取参数
 			//获取被选中的checkbox的value
 			var checkeds=$("#listB input[type='checkbox']:checked")
-			if(checkeds.size==0){
+			if(checkeds.size()==0){
 				alert("请选择要删除的市场活动")
 				return;
 			}

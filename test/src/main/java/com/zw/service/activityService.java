@@ -12,4 +12,5 @@ public interface activityService {
     activity modiac(String id);
     int updateact(activity activity);
     List<activity> queryAllact();
+    List<activity> xzqueryActivity(String[] ids);
 }

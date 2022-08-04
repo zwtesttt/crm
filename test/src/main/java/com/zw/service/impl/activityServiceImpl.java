@@ -43,4 +43,9 @@ public class activityServiceImpl implements activityService {
         return ac.queryAllactivity();
     }
 
+    @Override
+    public List<activity> xzqueryActivity(String[] ids) {
+        return ac.xzQueryActivity(ids);
+    }
+
 }
