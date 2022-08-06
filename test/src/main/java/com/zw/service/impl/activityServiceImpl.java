@@ -48,4 +48,14 @@ public class activityServiceImpl implements activityService {
         return ac.xzQueryActivity(ids);
     }
 
+    @Override
+    public int insertacti(List<activity> list) {
+        return ac.daoRuActivity(list);
+    }
+
+    @Override
+    public activity queryActivityDetail(String id) {
+        return ac.queryActivityDetail(id);
+    }
+
 }

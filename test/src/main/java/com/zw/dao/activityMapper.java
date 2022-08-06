@@ -106,4 +106,8 @@ public interface activityMapper {
 
     List<activity> xzQueryActivity(String[] ids);
 
+    int daoRuActivity(List<activity> acts);
+
+    activity queryActivityDetail(String id);
+
 }

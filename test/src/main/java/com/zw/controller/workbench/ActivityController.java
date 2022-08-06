@@ -1,14 +1,18 @@
 package com.zw.controller.workbench;
 
+import com.zw.domain.ActivityRemark;
 import com.zw.domain.activity;
 import com.zw.domain.user;
 import com.zw.gongong.changliang.ReturnObject;
 import com.zw.gongong.domain.Activityrespon;
 import com.zw.gongong.domain.ResponMessage;
 import com.zw.gongong.tools.DateFormat;
+import com.zw.gongong.tools.GetCellValue;
+import com.zw.service.ActivityRemarkService;
 import com.zw.service.UserService;
 import com.zw.service.activityService;
 import org.apache.logging.log4j.core.appender.OutputStreamManager;
+import org.apache.logging.log4j.core.util.UuidUtil;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -18,7 +22,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.JobKOctets;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,6 +40,9 @@ public class ActivityController {
     UserService service;
     @Autowired
     activityService acser;
+
+    @Autowired
+    ActivityRemarkService acremser;
     @RequestMapping("/workbench/activity/index")
     public String index(HttpServletRequest request){
         List<user> li = service.selectUsers();
@@ -299,5 +308,93 @@ public class ActivityController {
             out.flush();
             wb.close();
         }
+    }
+    /*
+    * 配置springmvc的文件上传
+    * */
+    @RequestMapping("/workbench/activity/fileUpload.do")
+    @ResponseBody
+    //文件上传
+    public Object fileUpload(String fileName, MultipartFile file) throws Exception {
+        System.out.println("filename="+fileName);
+        String fin=file.getOriginalFilename();
+        file.transferTo(new File("C:\\Users\\86147\\Desktop\\java\\zuoye\\"+fin));
+        ResponMessage redata=new ResponMessage();
+        redata.setCode(RETURN_OBJECT_CODE_CG);
+        redata.setMessage("上传成功");
+        return redata;
+    }
+    @RequestMapping("/workbench/activity/uploadActivity.do")
+    @ResponseBody
+    public Object uploadActivity(MultipartFile activityfile,HttpSession session){
+        ResponMessage redata=new ResponMessage();
+        user user=(user) session.getAttribute(SESSION_USER);
+        try {
+//            String fin=activityfile.getOriginalFilename();
+//            activityfile.transferTo(new File("C:\\Users\\86147\\Desktop\\java\\zuoye\\"+fin));
+//
+//            InputStream in = new FileInputStream("C:\\Users\\86147\\Desktop\\java\\zuoye\\"+fin);
+
+            InputStream in=activityfile.getInputStream();
+
+            HSSFWorkbook wb = new HSSFWorkbook(in);
+            HSSFSheet sheet = wb.getSheetAt(0);
+            HSSFRow row = null;
+            HSSFCell cell = null;
+            activity ac=null;
+            String uuid="";
+            List<activity> aclist=new ArrayList<>();
+            for (int i=1;i<=sheet.getLastRowNum();i++){
+                row=sheet.getRow(i);
+                ac=new activity();
+                uuid=UUID.randomUUID().toString().replaceAll("-","");
+                ac.setId(uuid);
+                System.out.println(uuid);
+                ac.setOwner(user.getId());
+                ac.setCreate_time(DateFormat.datefor(new Date()));
+                ac.setCreate_by(user.getId());
+                for (int k=0;k<row.getLastCellNum();k++){
+                    cell=row.getCell(k);
+                    //获取列中的值
+                    String cellvalue=GetCellValue.getCellValue(cell);
+                    if (k==0){
+                        ac.setName(cellvalue);
+                    }else if (k==1){
+                        ac.setStart_date(cellvalue);
+                    }else if (k==2){
+                        ac.setEnd_date(cellvalue);
+                    }else if(k==3){
+                        ac.setCost(cellvalue);
+                    }else if (k==4){
+                        ac.setDescription(cellvalue);
+                    }
+
+                }
+                aclist.add(ac);
+            }
+            int cgt=acser.insertacti(aclist);
+            redata.setCode(RETURN_OBJECT_CODE_CG);
+            redata.setMessage("成功导入"+cgt+"条数据");
+        }catch (Exception e){
+            e.printStackTrace();
+            redata.setCode(RETURN_OBJECT_CODE_SB);
+            redata.setMessage("系统忙");
+        }
+
+
+
+        return redata;
+    }
+    @RequestMapping("/workbench/activity/detailActivity.do")
+    public String detailActivity(String id,HttpServletRequest request){
+        activity act=acser.queryActivityDetail(id);
+        List<ActivityRemark> lit=acremser.queryActivityRemark(id);
+        System.out.println(act);
+//        System.out.println(lit.get(0));
+        //把数据存到request作用域
+        request.setAttribute("activity",act);
+        request.setAttribute("actremark",lit);
+
+        return "workbench/activity/detail";
     }
 }

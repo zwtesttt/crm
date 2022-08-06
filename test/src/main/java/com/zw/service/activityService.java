@@ -13,4 +13,8 @@ public interface activityService {
     int updateact(activity activity);
     List<activity> queryAllact();
     List<activity> xzqueryActivity(String[] ids);
+    int insertacti(List<activity> list);
+
+    activity queryActivityDetail(String id);
+
 }

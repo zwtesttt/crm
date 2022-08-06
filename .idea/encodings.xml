@@ -2,8 +2,13 @@
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8" addBOMForNewFiles="with BOM">
     <file url="file://$PROJECT_DIR$/test/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/controller/workbench/ActivityRemarkController.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/gongong/domain/Activityrespon.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/gongong/tools/GetCellValue.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/gongong/tools/UuidTools.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/service/ActivityRemarkService.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/service/activityService.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/service/impl/ActivityRemarkServiceImpl.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test/src/main/java/com/zw/service/impl/activityServiceImpl.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/test/src/test/java/com/zw/poi/App.java" charset="UTF-8" />

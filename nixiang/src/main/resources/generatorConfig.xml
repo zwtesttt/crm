@@ -30,7 +30,7 @@
 
         targetPackage="com.zw.domain"
 
-        targetProject="C:\Users\user1\Desktop\test\CRM1\test\src\main\java">
+        targetProject="C:\Users\86147\IdeaProjects\crm\test\src\main\java">
 
         <property name="enableSubPackages" value="true" />
         <property name="trimStrings" value="true" />
@@ -41,7 +41,7 @@
 
     targetPackage="com.zw.dao"
 
-    targetProject="C:\Users\user1\Desktop\test\CRM1\test\src\main\java">
+    targetProject="C:\Users\86147\IdeaProjects\crm\test\src\main\java">
     <property name="enableSubPackages" value="true" />
 </sqlMapGenerator>
 
@@ -50,12 +50,12 @@
 
         targetPackage="com.zw.dao"
 
-        targetProject="C:\Users\user1\Desktop\test\CRM1\test\src\main\java"><!--        //指定放在哪个目录下-->
+        targetProject="C:\Users\86147\IdeaProjects\crm\test\src\main\java"><!--        //指定放在哪个目录下-->
 
 <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 <!--        //指定根据哪个表生成-->
-<table tableName="tbl_activity" domainObjectName="activity" >
+<table tableName="tbl_activity_remark" domainObjectName="ActivityRemark">
 <property name="useActualColumnNames" value="true"/>
 <generatedKey column="ID" sqlStatement="DB2" identity="true" />
 <columnOverride column="DATE_FIELD" property="startDate" />

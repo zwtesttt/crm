@@ -24,6 +24,61 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript">
 
 	$(function(){
+		//给导入按钮添加单机事件
+		$("#importActivityBtn").click(function (){
+			var filename=$("#activityFile").val()
+			var suffix=filename.substr(filename.lastIndexOf(".")+1).toLocaleLowerCase()
+			if (suffix!="xls"){
+				alert("只支持excel文件")
+				return;
+			}
+			var file=$("#activityFile")[0].files[0];
+			if (file.size>50*1024*1024){
+				alert("文件太大了")
+				return;
+			}
+			//FromData获取二进制数据
+			var fromdata=new FormData()
+			fromdata.append("activityfile",file)
+			$.ajax({
+				url:"workbench/activity/uploadActivity.do",
+				type:"post",
+				data:fromdata,
+				dataType:"json",
+				processData:false,//设置ajax提交请求前是否将参数转成string
+				contentType:false,//设置ajax提交请求时，是否把参数按urlencoded编码
+
+				success:function (resp){
+					if (resp.code==1){
+						alert(resp.message)
+						$("#importActivityModal").modal("hide")
+						reloadac(1,$("#demo_pag1").bs_pagination('getOption', 'rowsPerPage'))
+					}else {
+						alert(resp.message)
+						$("#importActivityModal").modal("show")
+					}
+				}
+			})
+
+		})
+		//给选择导出按钮添加单机事件
+		$("#exportActivityXzBtn").click(function (){
+			//获取参数
+			//获取被选中的checkbox的value
+			var checkeds=$("#listB input[type='checkbox']:checked")
+
+			if(checkeds.size()==0){
+				alert("请选择要导出的市场活动")
+				return;
+			}else {
+				var ids=""
+				$.each(checkeds,function (){
+					ids+="id="+this.value+"&"
+				})
+				ids=ids.substr(0,ids.length-1)
+				window.location.href="workbench/activity/xzQueryActivity.do?"+ids
+			}
+		})
 		//给批量导出按钮添加单机事件
 		$("#exportActivityAllBtn").click(function (){
 			window.location.href="workbench/activity/exportAllActivity.do"
@@ -121,7 +176,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 			//获取参数
 			//获取被选中的checkbox的value
 			var checkeds=$("#listB input[type='checkbox']:checked")
-			if(checkeds.size==0){
+			if(checkeds.size()==0){
 				alert("请选择要删除的市场活动")
 				return;
 			}
@@ -284,7 +339,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				$.each(resp.activityList,function (i,p){
 					activityhtml+="<tr class=\"active\">--%>"
 					activityhtml+="<td><input type=\"checkbox\" value=\""+p.id+"\"/></td>"
-					activityhtml+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.html';\">"+p.name+"</a></td>"
+					activityhtml+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/activity/detailActivity.do?id="+p.id+"';\">"+p.name+"</a></td>"
 					activityhtml+="<td>"+p.owner+"</td>"
 					activityhtml+="<td>"+p.start_date+"</td>"
 					activityhtml+="<td>"+p.end_date+"</td>"
@@ -571,14 +626,14 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 					<tbody id="listB">
 <%--						<tr class="active">--%>
 <%--							<td><input type="checkbox" /></td>--%>
-<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>--%>
+<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a></td>--%>
 <%--                            <td>zhangsan</td>--%>
 <%--							<td>2020-10-10</td>--%>
 <%--							<td>2020-10-20</td>--%>
 <%--						</tr>--%>
 <%--                        <tr class="active">--%>
 <%--                            <td><input type="checkbox" /></td>--%>
-<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">发传单</a></td>--%>
+<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a></td>--%>
 <%--                            <td>zhangsan</td>--%>
 <%--                            <td>2020-10-10</td>--%>
 <%--                            <td>2020-10-20</td>--%>

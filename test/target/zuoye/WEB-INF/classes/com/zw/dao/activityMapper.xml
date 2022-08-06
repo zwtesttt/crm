@@ -138,6 +138,15 @@
     where id = #{id,jdbcType=CHAR}
   </delete>
 
+<!--  导入市场活动-->
+<insert id="daoRuActivity" parameterType="com.zw.domain.activity">
+    insert into tbl_activity(id, owner, name, start_date, end_date, cost, description, create_time, create_by,edit_time, edit_by)
+    values 
+    <foreach collection="list" item="obj" separator=",">
+      (#{obj.id},#{obj.owner},#{obj.name},#{obj.start_date},#{obj.end_date},#{obj.cost},#{obj.description},#{obj.create_time},#{obj.create_by},#{obj.edit_time},#{obj.edit_by})
+    </foreach>
+</insert>
+
   <select id="queryactivity" parameterType="map" resultMap="BaseResultMap">
     select
         a1.id,a1.name,u1.name as owner,a1.start_date,a1.end_date,a1.cost,a1.description,create_time,u2.name as create_by,a1.edit_time,u3.name as edit_by
@@ -162,6 +171,16 @@
     order by a1.start_date desc
     limit #{start_flg},#{pageflg}
   </select>
+<!--  查询市场活动详情-->
+  <select id="queryActivityDetail" parameterType="string" resultMap="BaseResultMap">
+    select
+      a1.id,a1.name,u1.name as owner,a1.start_date,a1.end_date,a1.cost,a1.description,create_time,u2.name as create_by,a1.edit_time,u3.name as edit_by
+    from tbl_activity a1
+           join tbl_user u1 on a1.owner=u1.id
+           join tbl_user u2 on a1.create_by=u2.id
+           left join tbl_user u3 on a1.edit_by=u3.id
+    where a1.id=#{id}
+  </select>
 <!--  查询所有市场活动-->
   <select id="queryAllactivity" resultType="com.zw.domain.activity">
     select
@@ -172,7 +191,21 @@
            left join tbl_user u3 on a1.edit_by=u3.id
     order by a1.start_date desc
   </select>
+<!--  选择查询市场活动-->
+  <select id="xzQueryActivity" parameterType="java.lang.String" resultType="com.zw.domain.activity">
+    select
+      a1.id,a1.name,u1.name as owner,a1.start_date,a1.end_date,a1.cost,a1.description,create_time,u2.name as create_by,a1.edit_time,u3.name as edit_by
+    from tbl_activity a1
+           join tbl_user u1 on a1.owner=u1.id
+           join tbl_user u2 on a1.create_by=u2.id
+           left join tbl_user u3 on a1.edit_by=u3.id
+    where a1.id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+    order by a1.start_date desc
 
+  </select>
 <!--  修改市场活动的-->
   <update id="updateactivity" parameterType="com.zw.domain.activity">
     update tbl_activity
