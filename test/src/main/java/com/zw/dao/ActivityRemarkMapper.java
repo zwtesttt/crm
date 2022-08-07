@@ -97,4 +97,6 @@ public interface ActivityRemarkMapper {
     List<ActivityRemark> queryActiviRemarks(String id);
 
     int insertActivityRemark(ActivityRemark remark);
+    int deleteActivityRemark(String id);
+    int updateActivityRemark(ActivityRemark remark);
 }

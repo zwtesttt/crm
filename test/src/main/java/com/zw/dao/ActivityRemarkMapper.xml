@@ -92,11 +92,19 @@
     -->
     id, note_content, create_time, create_by, edit_time, edit_by, edit_flag, activity_id
   </sql>
+<!--  修改市场活动备注-->
+  <update id="updateActivityRemark" parameterType="com.zw.domain.ActivityRemark">
+    update tbl_activity_remark set note_content=#{note_content},edit_time=#{edit_time},edit_by=#{edit_by},edit_flag=#{edit_flag} where id=#{id}
+  </update>
 <!--  添加市场活动备注-->
   <insert id="insertActivityRemark" parameterType="com.zw.domain.ActivityRemark">
     insert into tbl_activity_remark(id, note_content, create_time, create_by, edit_flag, activity_id)
     values(#{id},#{note_content},#{create_time},#{create_by},#{edit_flag},#{activity_id})
   </insert>
+<!--  删除市场活动备注-->
+  <delete id="deleteActivityRemark" parameterType="string">
+    delete from tbl_activity_remark where id=#{id}
+  </delete>
 <!--  查询市场活动备注-->
   <select id="queryActiviRemarks" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -105,6 +113,7 @@
     join tbl_user u1 on ar.create_by=u1.id
     left join tbl_user u2 on ar.edit_by=u2.id
     where ar.activity_id=#{id}
+    order by ar.create_time asc
 
   </select>
 

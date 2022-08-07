@@ -31,7 +31,7 @@ public class ActivityRemarkController {
         ResponMessage resp=new ResponMessage();
         try {
             int ss=acremrkser.insertActivityRemark(remark);
-            if (ss==1){
+            if (ss>0){
                 resp.setCode(ReturnObject.RETURN_OBJECT_CODE_CG);
                 resp.setXiangy(remark);
             }else {
@@ -45,5 +45,51 @@ public class ActivityRemarkController {
         }
 
         return resp;
+    }
+    @RequestMapping("/workbench/activity/deleteActivityRemark.do")
+    @ResponseBody
+    public Object deleteActivityRemark(String id){
+        ResponMessage reobj=new ResponMessage();
+        try {
+            int stu = acremrkser.delectActivityRemark(id);
+            if (stu>0){
+                reobj.setCode(ReturnObject.RETURN_OBJECT_CODE_CG);
+                reobj.setMessage("删除成功");
+            }else {
+                reobj.setCode(ReturnObject.RETURN_OBJECT_CODE_SB);
+                reobj.setMessage("删除失败，请重试");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            reobj.setCode(ReturnObject.RETURN_OBJECT_CODE_SB);
+            reobj.setMessage("删除失败，请重试");
+        }
+        return reobj;
+    }
+
+    @RequestMapping("/workbench/activity/updateActivityRemark.do")
+    @ResponseBody
+    public Object updateActivityRemark(ActivityRemark remark,HttpSession session){
+        remark.setEdit_time(DateFormat.datefor(new Date()));
+        user u1 = (user)session.getAttribute(ReturnObject.SESSION_USER);
+        remark.setEdit_by(u1.getId());
+        remark.setEdit_flag("1");
+        ResponMessage reobj=new ResponMessage();
+        try {
+            int stu=acremrkser.updateActivityRemark(remark);
+            if (stu>0){
+                reobj.setCode(ReturnObject.RETURN_OBJECT_CODE_CG);
+                reobj.setMessage("修改成功");
+                reobj.setXiangy(remark);
+            }else {
+                reobj.setCode(ReturnObject.RETURN_OBJECT_CODE_SB);
+                reobj.setMessage("修改失败");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            reobj.setCode(ReturnObject.RETURN_OBJECT_CODE_SB);
+            reobj.setMessage("修改失败");
+        }
+       return reobj;
     }
 }

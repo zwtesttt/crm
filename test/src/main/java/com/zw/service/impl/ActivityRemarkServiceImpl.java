@@ -21,4 +21,15 @@ public class ActivityRemarkServiceImpl implements ActivityRemarkService {
     public int insertActivityRemark(ActivityRemark remark) {
         return acm.insertActivityRemark(remark);
     }
+
+    @Override
+    public int delectActivityRemark(String id) {
+
+        return acm.deleteActivityRemark(id);
+    }
+
+    @Override
+    public int updateActivityRemark(ActivityRemark remark) {
+        return acm.updateActivityRemark(remark);
+    }
 }

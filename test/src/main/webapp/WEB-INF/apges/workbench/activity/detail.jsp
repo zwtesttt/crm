@@ -19,6 +19,69 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 	var cancelAndSaveBtnDefault = true;
 	
 	$(function(){
+		//给更新市场活动备注添加单机事件
+		$("#updateRemarkBtn").click(function (){
+			var id=$("#edit_id").val();
+			var text=$.trim($("#editnoteContent").val());
+			if (text==""){
+				alert("备注内容不能为空")
+				return;
+			}
+			$.ajax({
+				url:"workbench/activity/updateActivityRemark.do",
+				type:"post",
+				data:{
+					id:id,
+					note_content:text,
+				},
+				dataType:"json",
+				success:function (resp){
+					if (resp.code=="1"){
+						$("#editRemarkModal").modal("hide")
+						$("#div_"+id+" h5").text(resp.xiangy.note_content)
+						$("#div_"+id+" small").text(" "+resp.xiangy.edit_time+" 由${sessionScope.sessionuser.name}修改")
+
+					}else {
+						alert(resp.message)
+						$("#editRemarkModal").modal("show")
+					}
+				}
+			})
+		})
+
+		// 给所有市场活动备注的修改图标添加单机事件
+		$("#remarkDivList").on("click","a[name='modifyA']",function (){
+			var id=$(this).attr("remarkid")
+			var text=$("#h5_"+id).text()
+			// 把内容写到修改模态窗口
+			$("#edit_id").val(id);
+			$("#editnoteContent").val(text);
+			// 弹出修改市场活动备注的修改模态窗口
+			$("#editRemarkModal").modal("show")
+
+		})
+		//给所有删除图标添加单机事件
+		$("#remarkDivList").on("click","a[name='modifyB']",function (){
+			var reid=$(this).attr("remarkid")
+			$.ajax({
+				url:"workbench/activity/deleteActivityRemark.do",
+				type:"post",
+				data:{
+					id:reid,
+				},
+				dataType: "json",
+				success:function (resp){
+					if (resp.code=='1'){
+						//刷新备注列表
+						$("#div_"+reid).remove()
+
+					}else {
+						alert(resp.message)
+					}
+				}
+			})
+		})
+
 		//给保存按钮添加单机事件
 		$("#saveActivityRemarkBtn").click(function (){
 			var text=$.trim($("#remark").val())
@@ -39,15 +102,15 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 					if (resp.code=="1"){
 						$("#remark").val("")
 						var htmlStr=""
-						htmlStr+="<div class='remarkDiv' style='height: 60px;'>"
+						htmlStr+="<div id='div_"+resp.xiangy.id+"' class='remarkDiv' style='height: 60px;'>"
 						htmlStr+="<img title='${sessionScope.sessionuser.name}' src='image/user-thumbnail.png' style='width: 30px; height:30px;'>"
 						htmlStr+="<div style='position: relative; top: -40px; left: 40px;' >"
-						htmlStr+="<h5>"+text+"</h5>"
+						htmlStr+="<h5 id='h5_"+resp.xiangy.id+"'>"+text+"</h5>"
 						htmlStr+="<font color='gray'>市场活动</font> <font color='gray'>-</font> <b>${activity.name}</b> <small style='color: gray;'>"+resp.xiangy.create_time+"由${sessionScope.sessionuser.name}创建</small>"
 						htmlStr+="<div style='position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;'>"
-						htmlStr+="<a class='myHref' remarkid='"+resp.xiangy.id+"' href='javascript:void(0);'><span class='glyphicon glyphicon-edit' style='font-size: 20px; color: #E6E6E6;'></span></a>"
+						htmlStr+="<a class='myHref' name=\"modifyA\" remarkid='"+resp.xiangy.id+"' href='javascript:void(0);'><span class='glyphicon glyphicon-edit' style='font-size: 20px; color: #E6E6E6;'></span></a>"
 						htmlStr+="&nbsp;&nbsp;&nbsp;&nbsp;"
-						htmlStr+="<a class='myHref' remarkid='"+resp.xiangy.id+"' href='javascript:void(0);'><span class='glyphicon glyphicon-remove' style='font-size: 20px; color: #E6E6E6;'></span></a>"
+						htmlStr+="<a class='myHref' name=\"modifyB\" remarkid='"+resp.xiangy.id+"' href='javascript:void(0);'><span class='glyphicon glyphicon-remove' style='font-size: 20px; color: #E6E6E6;'></span></a>"
 						htmlStr+="</div>"
 						htmlStr+="</div>"
 						htmlStr+="</div>"
@@ -79,21 +142,33 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 			cancelAndSaveBtnDefault = true;
 		});
 		
-		$(".remarkDiv").mouseover(function(){
+		// $(".remarkDiv").mouseover(function(){
+		// 	$(this).children("div").children("div").show();
+		// });
+		$("#remarkDivList").on("mouseover",".remarkDiv",function (){
 			$(this).children("div").children("div").show();
-		});
+		})
 		
-		$(".remarkDiv").mouseout(function(){
+		// $(".remarkDiv").mouseout(function(){
+		// 	$(this).children("div").children("div").hide();
+		// });
+		$("#remarkDivList").on("mouseout",".remarkDiv",function (){
 			$(this).children("div").children("div").hide();
-		});
+		})
 		
-		$(".myHref").mouseover(function(){
+		// $(".myHref").mouseover(function(){
+		// 	$(this).children("span").css("color","red");
+		// });
+		$("#remarkDivList").on("mouseover",".myHref",function (){
 			$(this).children("span").css("color","red");
-		});
-		
-		$(".myHref").mouseout(function(){
+		})
+
+		// $(".myHref").mouseout(function(){
+		// 	$(this).children("span").css("color","#E6E6E6");
+		// });
+		$("#remarkDivList").on("mouseout",".myHref",function (){
 			$(this).children("span").css("color","#E6E6E6");
-		});
+		})
 	});
 	
 </script>
@@ -115,10 +190,11 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
+						<input type="hidden" id="edit_id"/>
                         <div class="form-group">
-                            <label for="noteContent" class="col-sm-2 control-label">内容</label>
+                            <label for="editnoteContent" class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="noteContent"></textarea>
+                                <textarea class="form-control" rows="3" id="editnoteContent"></textarea>
                             </div>
                         </div>
                     </form>
@@ -134,7 +210,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
     
 
 	<!-- 返回按钮 -->
-	<div style="position: relative; top: 35px; left: 10px;">
+	<div  style="position: relative; top: 35px; left: 10px;">
 		<a href="javascript:void(0);" onclick="window.history.back();"><span class="glyphicon glyphicon-arrow-left" style="font-size: 20px; color: #DDDDDD"></span></a>
 	</div>
 	
@@ -196,21 +272,21 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; top: 30px; left: 40px;">
+	<div id="remarkDivList" style="position: relative; top: 30px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
 <%--		遍历remarklist--%>
 		<c:forEach items="${actremark}" var="re" >
-			<div class="remarkDiv" style="height: 60px;">
+			<div id="div_${re.id}" class="remarkDiv" style="height: 60px;">
 				<img title="${re.create_by}" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
 				<div style="position: relative; top: -40px; left: 40px;">
-					<h5>${re.note_content}</h5>
+					<h5 id="h5_${re.id}">${re.note_content}</h5>
 					<font color="gray">市场活动</font> <font color="gray">-</font> <b>${activity.name}</b> <small style="color: gray;">${re.edit_flag=='1'?re.edit_time:re.create_time}由${re.edit_flag=='1'?re.edit_by:re.create_by} ${re.edit_flag=='1'?"修改":"创建"}</small>
 					<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-						<a class="myHref" remarkid="${re.id}" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						<a class="myHref" name="modifyA" remarkid="${re.id}" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a class="myHref" remarkid="${re.id}" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						<a class="myHref" name="modifyB" remarkid="${re.id}" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
 					</div>
 				</div>
 			</div>
