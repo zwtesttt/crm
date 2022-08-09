@@ -318,8 +318,6 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 		var owner=$("#query-owner").val()
 		var startdate=$("#query-startdate").val()
 		var enddate=$("#query-enddate").val()
-		// var startflg=1
-		// var pagecout=10
 		$.ajax({
 			url:"workbench/activity/chaxunac",
 			type:"post",

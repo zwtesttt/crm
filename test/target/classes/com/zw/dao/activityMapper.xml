@@ -171,6 +171,29 @@
     order by a1.start_date desc
     limit #{start_flg},#{pageflg}
   </select>
+<!--  关联市场活动-->
+  <select id="selectActivityDetailByNameByclueid" parameterType="map" resultMap="BaseResultMap">
+    select
+    a.id,a.name,a.start_date,a.end_date,u1.name as owner
+    from tbl_activity a
+    join tbl_user u1 on a.owner=u1.id
+    where a.name like '%' #{activityName} '%' and a.id not in (
+        select activity_id
+        from tbl_clue_activity_relation
+        where clue_id=#{clueId}
+    )
+
+  </select>
+<!--  查询跟线索关联的市场活动-->
+  <select id="selectActivityforClue" parameterType="string" resultMap="BaseResultMap">
+    select
+        a1.id,a1.name,a1.start_date,a1.end_date,u1.name as owner
+    from tbl_activity a1
+    join tbl_user u1 on a1.owner=u1.id
+    join tbl_clue_activity_relation car on a1.id=car.activity_id
+    where car.clue_id=#{clueid}
+  </select>
+
 <!--  查询市场活动详情-->
   <select id="queryActivityDetail" parameterType="string" resultMap="BaseResultMap">
     select

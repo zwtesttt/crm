@@ -110,4 +110,13 @@ public interface activityMapper {
 
     activity queryActivityDetail(String id);
 
+    List<activity> selectActivityforClue(String clueid);
+
+    /**
+     * 根据name模糊查询市场活动，并且把跟clueid关联过的市场活动排除
+     * @param map
+     * @return
+     */
+    List<activity> selectActivityDetailByNameByclueid(Map<String,Object> map);
+
 }

@@ -58,4 +58,14 @@ public class activityServiceImpl implements activityService {
         return ac.queryActivityDetail(id);
     }
 
+    @Override
+    public List<activity> queryActivityForClueId(String clueid) {
+        return ac.selectActivityforClue(clueid);
+    }
+
+    @Override
+    public List<activity> selectActivityByNameByClueId(Map<String, Object> map) {
+        return ac.selectActivityDetailByNameByclueid(map);
+    }
+
 }
