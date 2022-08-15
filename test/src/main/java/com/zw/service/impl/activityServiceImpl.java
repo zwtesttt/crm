@@ -68,4 +68,14 @@ public class activityServiceImpl implements activityService {
         return ac.selectActivityDetailByNameByclueid(map);
     }
 
+    @Override
+    public List<activity> selectActivityForDetailByids(String[] ids) {
+        return ac.selectActivityForDetailByIds(ids);
+    }
+
+    @Override
+    public List<activity> returnActivityForDetail(Map<String, Object> map) {
+        return ac.returnActivityForDetail(map);
+    }
+
 }

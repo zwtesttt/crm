@@ -171,6 +171,30 @@
     order by a1.start_date desc
     limit #{start_flg},#{pageflg}
   </select>
+  <select id="selectActivityForDetailByIds" parameterType="string" resultMap="BaseResultMap">
+    select
+      a.id,a.name,a.start_date,a.end_date,u1.name as owner
+    from tbl_activity a
+    join tbl_user u1 on a.owner=u1.id
+    where a.id in
+    <foreach collection="array" item="obj" separator="," open="(" close=")">
+      #{obj}
+    </foreach>
+  </select>
+
+<!--  根据name模糊查询市场活动，并且已经跟线索关联-->
+<select id="returnActivityForDetail" parameterType="map" resultMap="BaseResultMap">
+  select
+      a.id,a.name,a.start_date,a.end_date,u.name as owner
+      from tbl_activity a
+      join tbl_user u on a.owner=u.id
+        where a.name like '%' #{activiName} '%' and a.id in (
+        select activity_id
+        from tbl_clue_activity_relation
+        where clue_id=#{clueId}
+        )
+</select>
+
 <!--  关联市场活动-->
   <select id="selectActivityDetailByNameByclueid" parameterType="map" resultMap="BaseResultMap">
     select

@@ -164,6 +164,18 @@
          left join tbl_dic_value d3 on a1.source=d3.id
     where a1.id=#{id}
 </select>
+
+  <delete id="deleteClueById" parameterType="string">
+    delete from tbl_clue
+    where id=#{id}
+  </delete>
+  <select id="selectClueById" parameterType="string" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"/>
+    from tbl_clue
+    where id=#{id}
+  </select>
+
 <!--  查询线索总条数-->
   <select id="selectCon" parameterType="map" resultType="int">
     select

@@ -119,4 +119,13 @@ public interface activityMapper {
      */
     List<activity> selectActivityDetailByNameByclueid(Map<String,Object> map);
 
+    List<activity> selectActivityForDetailByIds(String[] ids);
+
+    /**
+     * 根据name模糊查询市场活动，并且已经跟线索关联
+     * @param map
+     * @return
+     */
+    List<activity> returnActivityForDetail(Map<String,Object> map);
+
 }

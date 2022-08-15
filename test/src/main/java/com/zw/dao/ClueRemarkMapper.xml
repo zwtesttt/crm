@@ -92,6 +92,28 @@
     -->
     id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, clue_id
   </sql>
+  <select id="selectClueRemarkByClueId" parameterType="string" resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List"></include>
+        from tbl_clue_remark
+    where clue_id=#{clueId}
+  </select>
+<!--添加线索备注-->
+  <insert id="insertClueRemark" parameterType="com.zw.domain.ClueRemark">
+    insert into tbl_clue_remark(
+      id, note_content, create_by, create_time, edit_flag, clue_id
+    )
+    values (
+             #{id},#{note_content},#{create_by},#{create_time},#{edit_flag},#{clue_id}
+           )
+
+  </insert>
+
+<!--  删除线索备注-->
+<delete id="deleteClueRemarkByClueId" parameterType="string">
+  delete from tbl_clue_remark where clue_id=#{clueId}
+</delete>
+
 <!--  查询线索备注-->
   <select id="selectClueRemark" parameterType="string" resultMap="BaseResultMap">
     select

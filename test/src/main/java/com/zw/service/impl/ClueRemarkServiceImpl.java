@@ -16,4 +16,9 @@ public class ClueRemarkServiceImpl implements ClueRemarkService {
     public List<ClueRemark> selectClueRemark(String id) {
         return cluemapper.selectClueRemark(id);
     }
+
+    @Override
+    public int insertClueRemark(ClueRemark clueRemark) {
+        return cluemapper.insertClueRemark(clueRemark);
+    }
 }

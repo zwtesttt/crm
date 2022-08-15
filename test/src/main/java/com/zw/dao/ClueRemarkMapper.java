@@ -1,5 +1,6 @@
 package com.zw.dao;
 
+import com.zw.domain.Clue;
 import com.zw.domain.ClueRemark;
 import com.zw.domain.ClueRemarkExample;
 import java.util.List;
@@ -94,4 +95,10 @@ public interface ClueRemarkMapper {
      */
     int updateByPrimaryKey(ClueRemark record);
     List<ClueRemark> selectClueRemark(String clueid);
+
+    List<ClueRemark> selectClueRemarkByClueId(String clueId);
+
+    int deleteClueRemarkByClueId(String clueId);
+
+    int insertClueRemark(ClueRemark clueRemark);
 }

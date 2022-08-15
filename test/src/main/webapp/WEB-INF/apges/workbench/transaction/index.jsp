@@ -1,23 +1,58 @@
-<!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page isELIgnored="false" %>
+<%
+String path=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
+%>
 <html>
 <head>
-<meta charset="UTF-8">
+	<base href="<%=path%>"/>
+	<meta charset="UTF-8">
 
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<link href="../../jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-
+<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 <script type="text/javascript">
 
 	$(function(){
-		
-		
+		loadTran()
+
+		// 给创建按钮添加单击事件
+		$("#saveTranBtn").click(function (){
+			window.location.href="workbench/tran/tosave.do"
+		})
+
 		
 	});
+	function loadTran(){
+		$.ajax({
+			url:"workbench/tran/queryAllTran.do",
+			type:"post",
+			success:function (re){
+				var text=""
+				$.each(re,function (i,p){
+
+					text+="<tr>"
+					text+="<td><input value='"+p.id+"' type=\"checkbox\" /></td>"
+					text+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.html';\">"+p.name+"</a></td>"
+					text+="<td>"+p.customer_id+"</td>"
+					text+="<td>"+p.stage+"</td>"
+					text+="<td>"+p.type+"</td>"
+					text+="<td>"+p.owner+"</td>"
+					text+="<td>"+p.source+"</td>"
+					text+="<td>"+p.contacts_id+"</td>"
+					text+="</tr>"
+				})
+				$("#tranBody").html(text)
+
+
+			}
+		})
+	}
 	
 </script>
 </head>
@@ -68,15 +103,9 @@
 				      <div class="input-group-addon">阶段</div>
 					  <select class="form-control">
 					  	<option></option>
-					  	<option>资质审查</option>
-					  	<option>需求分析</option>
-					  	<option>价值建议</option>
-					  	<option>确定决策者</option>
-					  	<option>提案/报价</option>
-					  	<option>谈判/复审</option>
-					  	<option>成交</option>
-					  	<option>丢失的线索</option>
-					  	<option>因竞争丢失关闭</option>
+					  	<c:forEach items="${stageList}" var="s">
+							<option value="${s.id}">${s.value}</option>
+						</c:forEach>
 					  </select>
 				    </div>
 				  </div>
@@ -86,8 +115,9 @@
 				      <div class="input-group-addon">类型</div>
 					  <select class="form-control">
 					  	<option></option>
-					  	<option>已有业务</option>
-					  	<option>新业务</option>
+					  	<c:forEach items="${transactionType}" var="type">
+							<option value="${type.id}">${type.value}</option>
+						</c:forEach>
 					  </select>
 				    </div>
 				  </div>
@@ -97,20 +127,9 @@
 				      <div class="input-group-addon">来源</div>
 				      <select class="form-control" id="create-clueSource">
 						  <option></option>
-						  <option>广告</option>
-						  <option>推销电话</option>
-						  <option>员工介绍</option>
-						  <option>外部介绍</option>
-						  <option>在线商场</option>
-						  <option>合作伙伴</option>
-						  <option>公开媒介</option>
-						  <option>销售邮件</option>
-						  <option>合作伙伴研讨会</option>
-						  <option>内部研讨会</option>
-						  <option>交易会</option>
-						  <option>web下载</option>
-						  <option>web调研</option>
-						  <option>聊天</option>
+						  <c:forEach items="${sourceList}" var="sou">
+							  <option value="${s.id}">${sou.value}</option>
+						  </c:forEach>
 						</select>
 				    </div>
 				  </div>
@@ -128,7 +147,7 @@
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" onclick="window.location.href='save.html';"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="saveTranBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" onclick="window.location.href='edit.html';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
@@ -149,27 +168,27 @@
 							<td>联系人名称</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点-交易01</a></td>
-							<td>动力节点</td>
-							<td>谈判/复审</td>
-							<td>新业务</td>
-							<td>zhangsan</td>
-							<td>广告</td>
-							<td>李四</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点-交易01</a></td>
-                            <td>动力节点</td>
-                            <td>谈判/复审</td>
-                            <td>新业务</td>
-                            <td>zhangsan</td>
-                            <td>广告</td>
-                            <td>李四</td>
-                        </tr>
+					<tbody id="tranBody">
+<%--						<tr>--%>
+<%--							<td><input type="checkbox" /></td>--%>
+<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点-交易01</a></td>--%>
+<%--							<td>动力节点</td>--%>
+<%--							<td>谈判/复审</td>--%>
+<%--							<td>新业务</td>--%>
+<%--							<td>zhangsan</td>--%>
+<%--							<td>广告</td>--%>
+<%--							<td>李四</td>--%>
+<%--						</tr>--%>
+<%--                        <tr class="active">--%>
+<%--                            <td><input type="checkbox" /></td>--%>
+<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点-交易01</a></td>--%>
+<%--                            <td>动力节点</td>--%>
+<%--                            <td>谈判/复审</td>--%>
+<%--                            <td>新业务</td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--                            <td>广告</td>--%>
+<%--                            <td>李四</td>--%>
+<%--                        </tr>--%>
 					</tbody>
 				</table>
 			</div>

@@ -19,6 +19,114 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 	var cancelAndSaveBtnDefault = true;
 	
 	$(function(){
+		// 给保存备注按钮添加单击事件
+		$("#saveClueRemark").click(function (){
+			var clueId='${clue.id}'
+			var noteContent=$.trim($("#remark").val())
+
+			if (noteContent==""){
+				alert("备注不能为空")
+				return;
+			}
+			$.ajax({
+				url:"workbench/clue/addClueRemark.do",
+				type:"post",
+				data:{
+					note_content:noteContent,
+					clue_id:clueId
+				},
+				dataType:"json",
+				success:function (resp){
+					if (resp.code=="1"){
+						var text="";
+						text+="<div id='"+resp.xiangy.id+"' class=\"remarkDiv\" style=\"height: 60px;\">"
+						text+="<img title=\"${sessionScope.sessionuser.name}\" src=\"image/user-thumbnail.png\" style=\"width: 30px; height:30px;\">"
+						text+="<div style=\"position: relative; top: -40px; left: 40px;\" >"
+						text+="<h5>"+resp.xiangy.note_content+"</h5>"
+						text+="<font color=\"gray\">线索</font> <font color=\"gray\">-</font> <b>${clue.fullname}${clue.appellation}-${clue.company}</b> <small style=\"color: gray;\">"+resp.xiangy.create_time+"由${sessionScope.sessionuser.name}创建</small>"
+						text+="<div style=\"position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;\">"
+						text+="<a class=\"myHref\" clueremarkid="+resp.xiangy.id+" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-edit\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>"
+						text+="nbsp;&nbsp;&nbsp;&nbsp;"
+						text+="<a class=\"myHref\" clueremarkid="+resp.xiangy.id+" href=\"javascript:void(0);\"><span class=\"glyphicon glyphicon-remove\" style=\"font-size: 20px; color: #E6E6E6;\"></span></a>"
+						text+="</div>"
+						text+="</div>"
+						text+="</div>"
+						$("#remarkDiv").before(text)
+						$("#remark").val("")
+					}else {
+						alert(resp.message)
+					}
+				}
+
+			})
+		})
+		// 给所有的解除关联按钮添加单机事件
+		$("#relationTbody").on("click","a",function(){
+			var activityId=$(this).attr("activityId")
+			var clueId="${clue.id}"
+			if(window.confirm("确认解除关联吗?")){
+				$.ajax({
+					url:"workbench/clue/deleteBund.do",
+					data:{
+						clue_id:clueId,
+						activity_id:activityId
+					},
+					type:"post",
+					dataType:"json",
+					success:function (re){
+						if (re.code=="1"){
+							$("#tr_"+activityId).remove()
+						}else {
+							alert(re.message)
+						}
+					}
+				})
+			}
+
+
+		})
+
+		//给关联按钮添加单击事件
+		$("#saveBundBtn").click(function (){
+			var chedids=$("#selectActTbody input[type='checkbox']:checked")
+			if (chedids.size()==0){
+				alert("请选择要关联的市场活动")
+				return;
+			}
+			var htmlid=""
+			$.each(chedids,function (index,data){
+				htmlid+="activityId="+data.value+"&";
+			})
+			htmlid+="clueId=${clue.id}"
+
+			$.ajax({
+				url: "workbench/clue/saveClueActivityRe.do",
+				type:"post",
+				data:htmlid,
+				dataType: "json",
+				success:function (resp){
+					if (resp.code=="1"){
+						$("#bundModal").modal("hide")
+
+						var text=""
+						$.each(resp.xiangy,function (i,p){
+								text+="<tr id='tr_"+p.id+"'>"
+								text+="<td>"+p.name+"</td>"
+								text+="<td>"+p.start_date+"</td>"
+								text+="<td>"+p.end_date+"</td>"
+								text+="<td>"+p.owner+"</td>"
+								text+="<td><a href=\"javascript:void(0);\" activityid='"+p.id+"' style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>解除关联</a></td>"
+								text+="</tr>"
+						})
+						$("#relationTbody").append(text)
+
+					}else {
+						alert(resp.message)
+						$("#bundModal").modal("show")
+					}
+				}
+			})
+		})
 		// 给搜索框添加键盘弹起事件
 		$("#selectInput").keyup(function (){
 			var activityName=this.value
@@ -51,6 +159,8 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 		})
 		// 给关联市场活动按钮添加单机事件
 		$("#bundActivityA").click(function (){
+			$("#selectInput").val("")
+			$("#selectActTbody").html("")
 			$("#bundModal").modal("show")
 		})
 		$("#remark").focus(function(){
@@ -86,6 +196,10 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 		$(".myHref").mouseout(function(){
 			$(this).children("span").css("color","#E6E6E6");
 		});
+		//给转换按钮添加单机事件
+		$("#traBtn").click(function (){
+			window.location.href="workbench/clue/ClueTrart.do?id=${clue.id}"
+		})
 	});
 	
 </script>
@@ -143,7 +257,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="saveBundBtn" >关联</button>
 				</div>
 			</div>
 		</div>
@@ -161,7 +275,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 			<h3>${clue.fullname}${clue.appellation} <small>${clue.company}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='convert.html';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
+			<button type="button" class="btn btn-default" id="traBtn"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
 			
 		</div>
 	</div>
@@ -276,7 +390,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 			</div>
 		</c:forEach>
 		
-<%--		<!-- 备注1 -->--%>
+		<!-- 备注1 -->
 <%--		<div class="remarkDiv" style="height: 60px;">--%>
 <%--			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">--%>
 <%--			<div style="position: relative; top: -40px; left: 40px;" >--%>
@@ -309,7 +423,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
 				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
 					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
+					<button type="button"  id="saveClueRemark" class="btn btn-primary">保存</button>
 				</p>
 			</form>
 		</div>
@@ -332,18 +446,17 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-					<c:forEach items="${activityList}" var="ac">
-						<tr>
-							<td>${ac.name}</td>
-							<td>${ac.create_date}</td>
-							<td>${ac.end_date}</td>
-							<td>${ac.owner}</td>
-							<td><a activityId="${ac.id}" href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
-
-					</c:forEach>
-<%--						<tr>--%>
+					<tbody id="relationTbody">
+						<c:forEach items="${activityList}" var="ac">
+							<tr id="tr_${ac.id}">
+								<td>${ac.name}</td>
+								<td>${ac.start_date}</td>
+								<td>${ac.end_date}</td>
+								<td>${ac.owner}</td>
+								<td><a activityId="${ac.id}" href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
+							</tr>
+						</c:forEach>
+	<%--						<tr>--%>
 <%--							<td>发传单</td>--%>
 <%--							<td>2020-10-10</td>--%>
 <%--							<td>2020-10-20</td>--%>

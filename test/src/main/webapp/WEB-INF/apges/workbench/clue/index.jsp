@@ -22,7 +22,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 	$(function(){
 		//给查询按钮添加单击事件
 		$("#chaxunBtn").click(function (){
-			loadClue(1,10)
+			selectClue(1,10)
 		})
 		// 给创建按钮添加单机事件
 		$("#createCluebtn").click(function (){
@@ -73,8 +73,8 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				success:function (resp){
 					if (resp.code=="1"){
 						$("#createClueModal").modal("hide")
-						alert(resp.code)
 						// 刷新线索
+						loadClue(1,10)
 					}else {
 						alert(resp.message)
 						$("#createClueModal").modal("show")
@@ -88,6 +88,48 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 	});
 
 	function loadClue(startflg,pagecout){
+		// var fullname=$.trim($("#query-fullname").val())
+		// var owner=$.trim($("#query-owner").val())
+		// var company=$.trim($("#query-company").val())
+		// var phone=$.trim($("#query-phone").val())
+		// var mphone=$.trim($("#query-mphone").val())
+		// var source=$("#query-source").val()
+		// var state=$("#query-state").val()
+		$.ajax({
+			url:"workbench/clue/chaxunclue.do",
+			type:"post",
+			data:{
+				// fullname: fullname,
+				// owner: owner,
+				// company: company,
+				// phone: phone,
+				// mphone: mphone,
+				// source: source,
+				// state: state,
+				start_flg: startflg,
+				pageflg: pagecout
+			},
+			dataType: "json",
+			success:function (resp){
+				$("#zongB").text(resp.count)
+				var cluetext=""
+				$.each(resp.lit,function (i,p){
+						cluetext+="<tr>"
+						cluetext+="<td><input value='"+p.id+"' type=\"checkbox\" /></td>"
+						cluetext+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/clue/detailClue.do?id="+p.id+"';\">"+p.fullname+"</a></td>"
+						cluetext+="<td>"+p.company+"</td>"
+						cluetext+="<td>"+p.phone+"</td>"
+						cluetext+="<td>"+p.mphone+"</td>"
+						cluetext+="<td>"+p.source+"</td>"
+						cluetext+="<td>"+p.owner+"</td>"
+						cluetext+="<td>"+p.state+"</td>"
+						cluetext+="</tr>"
+				})
+				$("#clueTbody").html(cluetext)
+			}
+		})
+	}
+	function selectClue(startflg,pagecout){
 		var fullname=$.trim($("#query-fullname").val())
 		var owner=$.trim($("#query-owner").val())
 		var company=$.trim($("#query-company").val())
@@ -114,16 +156,16 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 				$("#zongB").text(resp.count)
 				var cluetext=""
 				$.each(resp.lit,function (i,p){
-						cluetext+="<tr>"
-						cluetext+="<td><input value='"+p.id+"' type=\"checkbox\" /></td>"
-						cluetext+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/clue/detailClue.do?id="+p.id+"';\">"+p.fullname+"</a></td>"
-						cluetext+="<td>"+p.company+"</td>"
-						cluetext+="<td>"+p.phone+"</td>"
-						cluetext+="<td>"+p.mphone+"</td>"
-						cluetext+="<td>"+p.source+"</td>"
-						cluetext+="<td>"+p.owner+"</td>"
-						cluetext+="<td>"+p.state+"</td>"
-						cluetext+="</tr>"
+					cluetext+="<tr>"
+					cluetext+="<td><input value='"+p.id+"' type=\"checkbox\" /></td>"
+					cluetext+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/clue/detailClue.do?id="+p.id+"';\">"+p.fullname+"</a></td>"
+					cluetext+="<td>"+p.company+"</td>"
+					cluetext+="<td>"+p.phone+"</td>"
+					cluetext+="<td>"+p.mphone+"</td>"
+					cluetext+="<td>"+p.source+"</td>"
+					cluetext+="<td>"+p.owner+"</td>"
+					cluetext+="<td>"+p.state+"</td>"
+					cluetext+="</tr>"
 				})
 				$("#clueTbody").html(cluetext)
 			}

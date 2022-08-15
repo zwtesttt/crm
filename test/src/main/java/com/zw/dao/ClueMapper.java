@@ -101,4 +101,13 @@ public interface ClueMapper {
     List<Clue> selectClue(Map<String,Object> map);
     int selectCon(Map<String,Object> map);
     Clue selectClueDetail(String id);
+
+    Clue selectClueById(String id);
+
+    /**
+     * 根据id删除线索
+     * @param id
+     * @return
+     */
+    int deleteClueById(String id);
 }
