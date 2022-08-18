@@ -1,5 +1,6 @@
 package com.zw.service;
 
+import com.zw.domain.FunnelVO;
 import com.zw.domain.Tran;
 import jdk.dynalink.linker.LinkerServices;
 
@@ -10,4 +11,8 @@ public interface TranService {
     void saveTran(Map<String,Object> map);
 
     List<Tran> queryAllTran();
+
+    Tran queryTranDetail(String id);
+
+    List<FunnelVO> selectTranCount();
 }

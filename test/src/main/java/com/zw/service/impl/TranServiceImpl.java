@@ -1,10 +1,9 @@
 package com.zw.service.impl;
 
 import com.zw.dao.CustomerMapper;
+import com.zw.dao.TranHistoryMapper;
 import com.zw.dao.TranMapper;
-import com.zw.domain.Customer;
-import com.zw.domain.Tran;
-import com.zw.domain.user;
+import com.zw.domain.*;
 import com.zw.gongong.changliang.ReturnObject;
 import com.zw.gongong.tools.DateFormat;
 import com.zw.gongong.tools.UuidTools;
@@ -22,6 +21,8 @@ public class TranServiceImpl implements TranService {
     private CustomerMapper customerMapper;
     @Autowired
     private TranMapper tranMapper;
+    @Autowired
+    private TranHistoryMapper tranHistoryMapper;
 
     @Override
     public void saveTran(Map<String, Object> map) {
@@ -56,10 +57,31 @@ public class TranServiceImpl implements TranService {
         tran.setSource((String)map.get("source"));
         tran.setType((String)map.get("type"));
         tranMapper.insertTran(tran);
+
+
+        TranHistory tranhi=new TranHistory();
+        tranhi.setId(UuidTools.returnUuid());
+        tranhi.setTran_id(tran.getId());
+        tranhi.setCreate_by(u1.getId());
+        tranhi.setCreate_time(DateFormat.datefor(new Date()));
+        tranhi.setMoney(tran.getMoney());
+        tranhi.setStage(tran.getStage());
+        tranhi.setExpected_date(tran.getExpected_date());
+        tranHistoryMapper.insertTranHistory(tranhi);
     }
 
     @Override
     public List<Tran> queryAllTran() {
         return tranMapper.queryAllTran();
+    }
+
+    @Override
+    public Tran queryTranDetail(String id) {
+        return tranMapper.selectTranDetailById(id);
+    }
+
+    @Override
+    public List<FunnelVO> selectTranCount() {
+        return tranMapper.selectCountOfTranGroupByStage();
     }
 }

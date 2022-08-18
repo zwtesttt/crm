@@ -1,8 +1,11 @@
 package com.zw.dao;
 
+import com.zw.domain.FunnelVO;
 import com.zw.domain.Tran;
 import com.zw.domain.TranExample;
 import java.util.List;
+
+import com.zw.domain.TranHistory;
 import org.apache.ibatis.annotations.Param;
 
 public interface TranMapper {
@@ -97,4 +100,13 @@ public interface TranMapper {
     int insertTran(Tran tran);
 
     List<Tran> queryAllTran();
+
+    Tran selectTranDetailById(String id);
+
+    /**
+     * 查询交易表中各个阶段的数据量
+     * @return
+     */
+
+    List<FunnelVO> selectCountOfTranGroupByStage();
 }

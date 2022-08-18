@@ -1,14 +1,9 @@
 package com.zw.controller.workbench;
 
-import com.zw.domain.DivValue;
-import com.zw.domain.Tran;
-import com.zw.domain.user;
+import com.zw.domain.*;
 import com.zw.gongong.changliang.ReturnObject;
 import com.zw.gongong.domain.ResponMessage;
-import com.zw.service.CustomerService;
-import com.zw.service.DivValueService;
-import com.zw.service.TranService;
-import com.zw.service.UserService;
+import com.zw.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +30,12 @@ public class TranController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private TranRemarkService tranRemarkService;
+
+    @Autowired
+    private TranHistoryService tranHistoryService;
 
     @RequestMapping("/workbench/tran/index.do")
     public String index(HttpServletRequest request){
@@ -100,5 +101,28 @@ public class TranController {
         List<Tran> list=tranService.queryAllTran();
 
         return list;
+    }
+    @RequestMapping("/workbench/tran/detailTran.do")
+    public String detailTran(String id,HttpServletRequest request){
+        Tran tran=tranService.queryTranDetail(id);
+        List<TranRemark> remarklist=tranRemarkService.queryTranRemarks(id);
+        List<TranHistory> historyList=tranHistoryService.queryTranHistory(id);
+
+//        从配置文件获取可能性
+        ResourceBundle bundle=ResourceBundle.getBundle("stage");
+        String knx= bundle.getString(tran.getStage());
+        tran.setKnx(knx);
+
+
+        request.setAttribute("tran",tran);
+        request.setAttribute("tranremark",remarklist);
+        request.setAttribute("tranhistory",historyList);
+
+//        调用service方法查询交易所有的阶段
+        List<DivValue> list=divValueService.selectDivValue("stage");
+        request.setAttribute("stage",list);
+
+
+        return "workbench/transaction/detail";
     }
 }

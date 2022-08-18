@@ -19,6 +19,8 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <script type="text/javascript">
 
 	$(function(){
+
+
 		loadTran()
 
 		// 给创建按钮添加单击事件
@@ -35,10 +37,9 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 			success:function (re){
 				var text=""
 				$.each(re,function (i,p){
-
 					text+="<tr>"
 					text+="<td><input value='"+p.id+"' type=\"checkbox\" /></td>"
-					text+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='detail.html';\">"+p.name+"</a></td>"
+					text+="<td><a style=\"text-decoration: none; cursor: pointer;\" onclick=\"window.location.href='workbench/tran/detailTran.do?id="+p.id+"';\">"+p.name+"</a></td>"
 					text+="<td>"+p.customer_id+"</td>"
 					text+="<td>"+p.stage+"</td>"
 					text+="<td>"+p.type+"</td>"
@@ -171,7 +172,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 					<tbody id="tranBody">
 <%--						<tr>--%>
 <%--							<td><input type="checkbox" /></td>--%>
-<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点-交易01</a></td>--%>
+<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">动力节点-交易01</a></td>--%>
 <%--							<td>动力节点</td>--%>
 <%--							<td>谈判/复审</td>--%>
 <%--							<td>新业务</td>--%>
@@ -181,7 +182,7 @@ String path=request.getScheme()+"://"+request.getServerName()+":"+request.getSer
 <%--						</tr>--%>
 <%--                        <tr class="active">--%>
 <%--                            <td><input type="checkbox" /></td>--%>
-<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.html';">动力节点-交易01</a></td>--%>
+<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">动力节点-交易01</a></td>--%>
 <%--                            <td>动力节点</td>--%>
 <%--                            <td>谈判/复审</td>--%>
 <%--                            <td>新业务</td>--%>

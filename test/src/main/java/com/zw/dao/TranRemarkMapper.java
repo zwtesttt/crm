@@ -95,4 +95,6 @@ public interface TranRemarkMapper {
     int updateByPrimaryKey(TranRemark record);
 
     int insertTranRemarkByList(List<TranRemark> list);
+
+    List<TranRemark> selectTranRemark(String id);
 }
